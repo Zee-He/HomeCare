@@ -1,0 +1,31 @@
+{
+	"homeInfo": {
+		"title": "首页",
+		"href": "hc/welcome-other.html"
+	},
+	"logoInfo": {
+		"title": "颐养中心系统",
+		"image": "images/logo.png",
+		"href": ""
+	},
+	"menuInfo": [
+		{
+			"title": "实际运行",
+			"icon": "fa fa-slideshare",
+			"href": "",
+			"target": "_self",
+			"child": [
+				
+			]
+		},
+		{
+			"title": "后端调试",
+			"icon": "fa fa-slideshare",
+			"href": "",
+			"target": "_self",
+			"child": [
+				
+			]
+		}
+	]
+}

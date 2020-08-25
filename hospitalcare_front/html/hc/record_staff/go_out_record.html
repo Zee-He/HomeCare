@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>外出记录</title>
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <link rel="stylesheet" href="../../lib/layui-v2.5.5/css/layui.css" media="all" />
+    <link rel="stylesheet" href="../../css/public.css" media="all" />
+</head>
+
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px;">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">客户编号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="cid" name="cid" autocomplete="off" class="layui-input" />
+                            </div>
+                            <label class="layui-form-label">床位号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="bid" name="bid" autocomplete="off" class="layui-input" />
+                            </div>
+                            <label class="layui-form-label">外出时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="goOutDate" name="goOutDate" autocomplete="off" class="layui-input" />
+                            </div>
+                            <label class="layui-form-label">回归时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="goBackDate" name="goBackDate" autocomplete="off" class="layui-input" />
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button
+                                    type="submit"
+                                    class="layui-btn layui-btn-primary"
+                                    lay-submit
+                                    lay-filter="data-search-btn"
+                            >
+                                <i class="layui-icon"></i> 搜 索
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="gooutadd"> 添加 </button>
+            </div>
+        </script>
+
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+    </div>
+</div>
+<script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+<script src="../../js/common.js"></script>
+<script>
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#goOutDate' //指定元素
+            ,type: 'datetime'
+        });
+        laydate.render({
+            elem: '#goBackDate' //指定元素
+            ,type: 'datetime'
+        });
+    });
+    layui.use(["form", "table"], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+
+        table.render({
+            elem: "#currentTableId",
+
+            // TODO 这里相当于ajax请求，不过名称有些不同
+            url: GC.bctx + "goOutRecord/findall", // 获取数据的接口
+            method: "post",
+            // request参数定义了分页查询时的页码和条目数对应的服务器端参数名称
+            request: {
+                pageName: "page", //页码的参数名称，默认：page
+                limitName: "limit", //每页数据量的参数名，默认：limit
+            },
+            headers: HC.token(),
+            parseData: (res) => {
+                return {
+                    code: res.code === 200 ? 0 : res.code, //解析接口状态
+                    msg: res.message, //解析提示文本
+                    count: res.data.totalElements, //解析数据长度
+                    data: res.data.content, //解析数据列表
+                };
+            },
+
+            // 这里无需修改
+            toolbar: "#toolbarDemo",
+            defaultToolbar: [
+                "filter",
+                "exports",
+                "print",
+                {
+                    title: "提示",
+                    layEvent: "LAYTABLE_TIPS",
+                    icon: "layui-icon-tips",
+                },
+            ],
+
+            cols: [
+                [
+                    { type: "checkbox", width: 50 },
+
+                    // 下面是字段名和表头
+                    { field: "cid", width: 80, title: "客户编号", sort: true },
+                    { field: "bid", width: 80, title: "床位号", sort: true },
+                    { field: "gooutdate", width: 80, title: "外出时间", sort: true, templet:'<div>{{ layui.util.toDateString(d.goOutDate, "yyyy-MM-dd HH:mm:ss") }}</div>' },
+                    { field: "gobackdate", width: 80, title: "回归时间", sort: true, templet:'<div>{{ layui.util.toDateString(d.goBackDate, "yyyy-MM-dd HH:mm:ss") }}</div>' },
+                ],
+            ],
+            limits: [10],
+            limit: 10,
+            page: true,
+            skin: "line",
+        });
+
+        // 监听搜索操作
+        form.on("submit(data-search-btn)", function (data) {
+
+            //执行搜索重载
+            table.reload(
+                "currentTableId",
+                {
+                    // TODO 下面是搜索的接口，除了额外参数和接口名不同，其他基本相同
+                    url: GC.bctx + "goOutRecord/findbycondition", // TODO 搜索数据的接口
+                    method: "post",
+                    // request参数定义了分页查询时的页码和条目数对应的服务器端参数名称
+                    request: {
+                        pageName: "page", //页码的参数名称，默认：page
+                        limitName: "limit", //每页数据量的参数名，默认：limit
+                    },
+                    // TODO data.field是JSON格式的表单数据，直接应用即可（如果是post方式）
+                    where:data.field,
+                    page:{
+                        curr:1
+                    },
+                    headers: HC.token(),
+                    parseData: (res) => {
+                        return {
+                            code: res.code === 200 ? 0 : res.code, //解析接口状态
+                            msg: res.message, //解析提示文本
+                            count: res.data.totalElements, //解析数据长度
+                            data: res.data.content, //解析数据列表
+                        };
+                    },
+                },
+                "data"
+            );
+
+            return false;
+        });
+
+        /**
+         * toolbar监听事件
+         */
+        table.on("toolbar(currentTableFilter)", function (obj) {
+            if (obj.event === "gooutadd") {
+                // 监听添加操作
+                var index = layer.open({
+                    title: "添加外出记录",
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    shadeClose: true,
+                    area: ["100%", "100%"],
+                    // TODO 添加页面目标
+                    content: "gooutadd.html",
+
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            }
+        });
+
+        //监听表格复选框选择
+        table.on("checkbox(currentTableFilter)", function (obj) {
+            console.log(obj);
+        });
+
+        table.on("tool(currentTableFilter)", function (obj) {
+            var data = obj.data;
+            // 监听编辑事件
+            if (obj.event === "edit") {
+                var index = layer.open({
+                    title: "编辑用户",
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    shadeClose: true,
+                    area: ["100%", "100%"],
+                    // TODO 编辑页面目标
+                    content: "gooutedit.html",
+                    // TODO 向编辑页面传值
+                    success:()=>{
+                        var iframe = window['layui-layer-iframe' + index];
+                        iframe.child(data)
+                    }
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === "delete") {
+                // 监听单行删除操作
+                layer.confirm("确认删除该行？", function (index) {
+                    // TODO 删除数据操作，这个使用普通的ajax就行
+                    console.log(data)
+                    $.ajax(HC.packAjaxData({
+                        url:"goOutRecord/delete",
+                        type:"delete",
+                        data: {
+                            cid: data.cid,
+                            bid: data.bid,
+                            goOutDate: layui.util.toDateString(data.goOutDate),
+                            goBackDate: layui.util.toDateString(data.goBackDate),
+                        },
+                        success:(r)=>{
+                            if (r.successed) {
+                                // 刷新页面表格
+                                obj.del();
+                            } else {
+                                layer.alert(r.message)
+                            }
+                        }
+                    }))
+                    layer.close(index);
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

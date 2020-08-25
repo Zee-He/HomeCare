@@ -1,0 +1,7 @@
+{
+	"page":{
+		"limit":10,
+		"limits":[10,15,20],
+		"description":"use $.getJSON() for this"
+	}
+}
