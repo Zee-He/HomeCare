@@ -97,10 +97,10 @@
                 [
                     {type: "checkbox", width: 50},
                     // 下面是字段名和表头
-                    {field: "cid", width: 110, title: "客户编号", sort: true},
-                    {field: "healthRecordDate", width: 160, title: "建档日期", sort: true, templet:'<div>{{ layui.util.toDateString(d.healthRecordDate, "yyyy-MM-dd HH:mm:ss") }}</div>'},
-                    {field: "healthRecord", width: 800, title: "健康档案", },
-                    {title: "操作", minWidth: 50, toolbar: "#currentTableBar", align: "center"},
+                    {field: "cid", title: "客户编号", sort: true},
+                    {field: "healthRecordDate", title: "建档日期", sort: true, templet:'<div>{{ layui.util.toDateString(d.healthRecordDate, "yyyy-MM-dd HH:mm:ss") }}</div>'},
+                    {field: "healthRecord", title: "健康档案", },
+                    {title: "操作", toolbar: "#currentTableBar", align: "center"},
                 ],
             ],
             limits: [10],

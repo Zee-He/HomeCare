@@ -120,10 +120,10 @@
                     { type: "checkbox", width: 50 },
 
                     // 下面是字段名和表头
-                    { field: "cid", width: 80, title: "客户编号", sort: true },
-                    { field: "bid", width: 80, title: "床位号", sort: true },
-                    { field: "gooutdate", width: 80, title: "外出时间", sort: true, templet:'<div>{{ layui.util.toDateString(d.goOutDate, "yyyy-MM-dd HH:mm:ss") }}</div>' },
-                    { field: "gobackdate", width: 80, title: "回归时间", sort: true, templet:'<div>{{ layui.util.toDateString(d.goBackDate, "yyyy-MM-dd HH:mm:ss") }}</div>' },
+                    { field: "cid", title: "客户编号", sort: true },
+                    { field: "bid", title: "床位号", sort: true },
+                    { field: "gooutdate", title: "外出时间", sort: true, templet:'<div>{{ layui.util.toDateString(d.goOutDate, "yyyy-MM-dd HH:mm:ss") }}</div>' },
+                    { field: "gobackdate", title: "回归时间", sort: true, templet:'<div>{{ layui.util.toDateString(d.goBackDate, "yyyy-MM-dd HH:mm:ss") }}</div>' },
                 ],
             ],
             limits: [10],
