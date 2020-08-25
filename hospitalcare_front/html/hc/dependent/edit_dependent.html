@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>layui</title>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="stylesheet" href="../../lib/layui-v2.5.5/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/public.css" media="all"/>
+    <script src="../../js/common.js" charset="utf-8"></script>
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form layuimini-form" lay-filter="dependent_mod">
+    <div class="layui-form-item">
+        <label class="layui-form-label ">客户编号</label>
+        <div class="layui-input-block">
+            <input
+                    type="number"
+                    name="cid"
+                    readonly="readonly"
+                    value=""
+                    class="layui-input"
+            />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">家属姓名</label>
+        <div class="layui-input-block">
+            <input
+                    type="text"
+                    name="dependentName"
+                    lay-verify="required"
+                    lay-reqtext="家属姓名不能为空"
+                    placeholder="请输入姓名"
+                    value=""
+                    class="layui-input"
+            />
+            <tip>请填写真实姓名</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">与客户的关系</label>
+        <div class="layui-input-block">
+            <input
+                    type="text"
+                    name="relationship"
+                    lay-verify="required"
+                    lay-reqtext="家属与客户的关系不能为空"
+                    placeholder="请输入家属与客户的关系"
+                    value=""
+                    class="layui-input"
+            />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">联系方式</label>
+        <div class="layui-input-block">
+            <input
+                    type="text"
+                    name="dependentTelephone"
+                    lay-verify="dependentTelephone"
+                    placeholder="请输入手机号码"
+                    value=""
+                    class="layui-input"
+            />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+</div>
+
+<script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+<script>
+
+    let old = null;
+    function child(params) {
+        layui.use(["form"], () => {
+            // console.log(typeof(params))
+            // params是父页面传过来的对象，可以打印但是不能直接用于复制
+            // 原因不明，但深拷贝一次可以解决这个问题
+            params = JSON.parse(JSON.stringify(params))
+            layui.form.val('dependent_mod', params)
+            old=params
+
+        })
+    }
+
+    layui.use(["form"], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+
+        // 自定义验证格式，进阶
+        form.verify({
+            dependentTelephone: (value) => {
+                if(value.length==0){
+                    return "联系方式不能为空";
+                }
+                if (!/^[\d]{11}$/.test(value)) {
+                    return "格式不合法";
+                }
+                // 或者使用验证码验证手机号
+            },
+        });
+
+        //监听提交
+        form.on("submit(saveBtn)", function (data) {
+            let field = {
+                cid: +data.field.cid,
+                dependentName: data.field.dependentName,
+                relationship:data.field.relationship,
+                dependentTelephone:+data.field.dependentTelephone
+            }
+            // console.log(data.field.dependentName)
+            // console.log(field.dependentName)
+            // TODO 执行提交
+            $.ajax(
+                HC.packAjaxData({
+                    url: "dependent/update",
+                    type: "put",
+                    data: {
+                        update:JSON.stringify({
+                            old:old,
+                            new:field
+                        })
+                    },
+                    success: (r) => {
+                        if (r.successed) {
+                            // 关闭页面
+                            let index = layer.alert(
+                                r.message,
+                                () => {
+                                    // 关闭弹出层
+                                    layer.close(index);
+                                    var iframeIndex = parent.layer.getFrameIndex(window.name);
+                                    parent.layer.close(iframeIndex);
+                                }
+                            );
+                        } else {
+                            layer.alert(r.message);
+                        }
+                    },
+                })
+            );
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

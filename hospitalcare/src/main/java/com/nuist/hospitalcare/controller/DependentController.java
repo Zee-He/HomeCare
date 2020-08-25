@@ -14,8 +14,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.nuist.hospitalcare.bean.ResultBean;
 import com.nuist.hospitalcare.entity.Dependent;
+import com.nuist.hospitalcare.entity.ServiceRelationship;
+import com.nuist.hospitalcare.entity.ServiceRelationshipKey;
 import com.nuist.hospitalcare.service.DependentService;
 
 /**
@@ -60,15 +64,14 @@ public class DependentController {
 	 * @return
 	 */
 	@PutMapping(value = "update")
-	public ResultBean update(@Validated Dependent dependent,BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			StringBuffer msgBuffer= new StringBuffer();
-			for (FieldError iterable_element : bindingResult.getFieldErrors()) {
-				msgBuffer.append(iterable_element.getField()+":"+iterable_element.getDefaultMessage()+"\n");
-			}	
-			return new ResultBean(5006, false,msgBuffer.toString(), null);
-		}
-		boolean flag=dependentService.update(dependent);
+	public ResultBean update(String update) {
+		JSONObject t = JSON.parseObject(update);
+		System.out.println(t);
+		Dependent oldDependent = JSON.parseObject(t.getString("old"), Dependent.class);
+		Dependent newDependent = JSON.parseObject(t.getString("new"), Dependent.class);
+		System.out.println(oldDependent);
+		System.out.println(newDependent);
+		boolean flag=dependentService.update(oldDependent,newDependent);
 		if(flag) {
 			return new ResultBean(200,true,"修改成功","");
 		}else {

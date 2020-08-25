@@ -100,7 +100,7 @@
 
             cols: [
                 [
-                    {type: "checkbox", width: 50},
+                    // {type: "checkbox", width: 50},
                     // 下面是字段名和表头
                     {field: "cid", title: "客户编号", sort: true},
                     {field: "eid", title: "员工编号", sort: true},
@@ -169,10 +169,10 @@
             }
         });
 
-        //监听表格复选框选择
-        table.on("checkbox(currentTableFilter)", function (obj) {
-            console.log(obj);
-        });
+        // //监听表格复选框选择
+        // table.on("checkbox(currentTableFilter)", function (obj) {
+        //     console.log(obj);
+        // });
 
         table.on("tool(currentTableFilter)", function (obj) {
             var data = obj.data;

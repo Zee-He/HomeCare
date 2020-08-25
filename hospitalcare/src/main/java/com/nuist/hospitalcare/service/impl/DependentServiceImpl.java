@@ -34,9 +34,17 @@ public class DependentServiceImpl implements DependentService {
 	}
 
 	@Override
-	public boolean update(Dependent dependent) {
+	public boolean update(Dependent oldDependent,Dependent newDependent) {
+		if(!dependentRepository.existsById(oldDependent)) {
+			return false;
+		}
+		if(dependentRepository.existsById(newDependent)) {
+			return false;
+		}
 		try {
-			dependentRepository.save(dependent);
+			dependentRepository.deleteById(oldDependent);
+			System.out.println(111);
+			dependentRepository.save(newDependent);
 			return true;
 		} catch (Exception e) {
 			return false;

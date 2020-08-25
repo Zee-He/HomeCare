@@ -25,7 +25,7 @@ public interface DependentService {
 	 * @param dependent 家属信息
 	 * @return
 	 */
-	boolean update(Dependent dependent);
+	boolean update(Dependent oldDependent,Dependent newDependent);
 	
 	/**
 	 * 根据客户编号删除该客户的所有家属信息

@@ -99,12 +99,12 @@
 
             cols: [
                 [
-                    {type: "checkbox", width: 50},
+                    // {type: "checkbox", width: 50},
                     // 下面是字段名和表头
-                    {field: "cid", width: 110, title: "客户编号", sort: true},
-                    {field: "serviceId", width: 110, title: "服务编号", sort: true},
-                    {field: "pdate", width: 160, title: "购买日期", sort: true, templet:'<div>{{ layui.util.toDateString(d.pdate, "yyyy-MM-dd HH:mm:ss") }}</div>'},
-                    {title: "操作", minWidth: 50, toolbar: "#currentTableBar", align: "center"},
+                    {field: "cid", title: "客户编号", sort: true},
+                    {field: "serviceId", title: "服务编号", sort: true},
+                    {field: "pdate", title: "购买日期", sort: true, templet:'<div>{{ layui.util.toDateString(d.pdate, "yyyy-MM-dd HH:mm:ss") }}</div>'},
+                    {title: "操作", toolbar: "#currentTableBar", align: "center"},
                 ],
             ],
             limits: [10],
@@ -171,10 +171,10 @@
         //     }
         // });
 
-        //监听表格复选框选择
-        table.on("checkbox(currentTableFilter)", function (obj) {
-            console.log(obj);
-        });
+        // //监听表格复选框选择
+        // table.on("checkbox(currentTableFilter)", function (obj) {
+        //     console.log(obj);
+        // });
 
         table.on("tool(currentTableFilter)", function (obj) {
             var data = obj.data;
