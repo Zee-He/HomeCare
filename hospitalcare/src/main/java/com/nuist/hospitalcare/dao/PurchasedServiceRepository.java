@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.nuist.hospitalcare.entity.PurchasedService;
 import com.nuist.hospitalcare.entity.PurchasedServiceKey;
 
@@ -23,18 +25,20 @@ public interface PurchasedServiceRepository extends JpaRepository<PurchasedServi
 	 * 
 	 * @param cid
 	 */
-	@Modifying
+	@Transactional
+	@Modifying(clearAutomatically = true)
 	@Query(nativeQuery = true, value = "delete from purchased_service where cid=?1")
-	void deleteByCid(Integer cid);
+	void deleteAllByCid(Integer cid);
 
 	/**
 	 * 删除该服务所有购买记录
 	 * 
 	 * @param serviceId
 	 */
-	@Modifying
+	@Transactional
+	@Modifying(clearAutomatically = true)
 	@Query(nativeQuery = true, value = "delete from purchased_service where service_id=?1")
-	void deleteByServiceId(Integer serviceId);
+	void deleteAllByServiceId(Integer serviceId);
 
 	/**
 	 * 根据客户、服务组合分页查询

@@ -31,13 +31,11 @@ public class ServiceRelationship implements Serializable {
 	 * 客户编号
 	 */
 	@Id
-//	@NotBlank(message = "客户编号不能为空")
     private Integer cid;
 	
 	/**
 	 * 员工编号
 	 */
 	@Id
-//	@NotBlank(message = "员工编号不能为空")
 	private Integer eid;
 }

@@ -26,17 +26,50 @@
 							"href": "hc/customer/customer.html",
 							"icon": "fa fa-gears",
 							"target": "_self"
+						},
+						{
+							"title": "家属信息",
+							"href": "hc/dependent/dependent.html",
+							"icon": "fa fa-gears",
+							"target": "_self"
+						},
+						{
+							"title": "健康档案",
+							"href": "hc/customer_health/customer_health.html",
+							"icon": "fa fa-gears",
+							"target": "_self"
 						}
 					]
-				},{
+				},
+				{
 					"title": "服务管理",
 					"href": "",
 					"icon": "fa fa-gears",
 					"target": "_self",
-					"child": [
+					"child":[
 						{
 							"title": "服务信息",
 							"href": "hc/service/service.html",
+							"icon": "fa fa-gears",
+							"target": "_self"
+						},
+						{
+							"title": "服务购买记录",
+							"href": "hc/purchased_service/purchased_service.html",
+							"icon": "fa fa-gears",
+							"target": "_self"
+						}
+					]
+				},
+				{
+					"title": "护士站",
+					"href": "",
+					"icon": "fa fa-gears",
+					"target": "_self",
+					"child":[
+						{
+							"title": "服务关系管理",
+							"href": "hc/service_relationship/service_relationship.html",
 							"icon": "fa fa-gears",
 							"target": "_self"
 						}

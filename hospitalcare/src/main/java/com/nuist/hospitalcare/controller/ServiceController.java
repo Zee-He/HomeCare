@@ -25,6 +25,7 @@ import com.nuist.hospitalcare.service.ServiceService;
 @RestController
 @RequestMapping(value = "service")// 所有具有前缀service均路由到此控制器
 public class ServiceController {
+//	private static final int PAGE_SIZE=10;//分页查询每页大小
 	@Autowired
 	private ServiceService serviceService;
 
@@ -63,12 +64,13 @@ public class ServiceController {
 	}
 	/**
 	 * 更新服务信息
+	 * @param serviceId
 	 * @param service 
 	 * @param bindingResult
 	 * @return
 	 */
 	@PutMapping(value = "update/{serviceId}")
-	public ResultBean update(@Validated Service service,BindingResult bindingResult) {
+	public ResultBean update(@PathVariable("serviceId")Integer serviceId,@Validated Service service,BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			StringBuffer msgBuffer= new StringBuffer();
 			for (FieldError iterable_element : bindingResult.getFieldErrors()) {
@@ -104,6 +106,9 @@ public class ServiceController {
 	 */
 	@PostMapping("findbyname")
 	public ResultBean findByName(String serviceName, Integer page,Integer limit) {
+		System.out.println(serviceName);
+		System.out.println(page);
+		System.out.println(limit);
 		page=page-1;
 		Page<Service> servicePage = serviceService.findByName(serviceName, PageRequest.of(page, limit));
 		return new ResultBean(200, true, "查询成功", servicePage);

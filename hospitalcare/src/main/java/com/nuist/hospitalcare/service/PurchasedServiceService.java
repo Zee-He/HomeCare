@@ -24,14 +24,14 @@ public interface PurchasedServiceService {
 	 * @param cid 客户编号
 	 * @return
 	 */
-	boolean deleteByCid(Integer cid);
+	boolean deleteAllByCid(Integer cid);
 	
 	/**
 	 * 根据服务编号删除该服务的全部购买记录
 	 * @param serviceId 服务编号
 	 * @return
 	 */
-	boolean deleteByServiceId(Integer serviceId);
+	boolean deleteAllByServiceId(Integer serviceId);
 	
 	/**
 	 *根据主键 删除已购服务记录

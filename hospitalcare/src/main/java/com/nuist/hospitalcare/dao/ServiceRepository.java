@@ -1,8 +1,10 @@
 package com.nuist.hospitalcare.dao;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import com.nuist.hospitalcare.entity.Service;
 
 /**
@@ -17,5 +19,6 @@ public interface ServiceRepository extends JpaRepository<Service, Integer> {
 	 * @param pageable 分页规则
 	 * @return
 	 */
-	Page<Service> findByServiceNameContaining(String serviceName, Pageable pageable);
+	@Query(nativeQuery = true,value = "select * from service where if(?1 !='',service_name like concat('%',?1,'%'),1=1)")
+	Page<Service> findByNameLike(@Param("serviceName")String serviceName, Pageable pageable);
 }

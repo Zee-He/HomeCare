@@ -23,8 +23,8 @@ public class ServiceRelationshipServiceImpl implements ServiceRelationshipServic
 	
 	@Override
 	public boolean insert(ServiceRelationship serviceRelationship) {
-		ServiceRelationshipKey ServiceRelationshipKey=new ServiceRelationshipKey(serviceRelationship.getCid(), serviceRelationship.getEid());
-		if (serviceRelationshipRepository.existsById(ServiceRelationshipKey)){
+		ServiceRelationshipKey serviceRelationshipKey=new ServiceRelationshipKey(serviceRelationship.getCid(), serviceRelationship.getEid());
+		if (serviceRelationshipRepository.existsById(serviceRelationshipKey)){
 			return false;
 		}
 		try {
@@ -34,11 +34,14 @@ public class ServiceRelationshipServiceImpl implements ServiceRelationshipServic
 			return false;
 		}
 	}
-
+	
 	@Override
-	public boolean deleteByCid(Integer cid) {
+	public boolean update(ServiceRelationship serviceRelationship) {
+//		if (!serviceRelationshipRepository.existsById(serviceRelationshipKey)){
+//			return false;
+//		}
 		try {
-			serviceRelationshipRepository.deleteByCid(cid);
+			serviceRelationshipRepository.save(serviceRelationship);
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -46,9 +49,19 @@ public class ServiceRelationshipServiceImpl implements ServiceRelationshipServic
 	}
 
 	@Override
-	public boolean deleteByEid(Integer eid) {
+	public boolean deleteAllByCid(Integer cid) {
 		try {
-			serviceRelationshipRepository.deleteByServiceId(eid);
+			serviceRelationshipRepository.deleteAllByCid(cid);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean deleteAllByEid(Integer eid) {
+		try {
+			serviceRelationshipRepository.deleteAllByEid(eid);
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -62,16 +75,6 @@ public class ServiceRelationshipServiceImpl implements ServiceRelationshipServic
 		}
 		try {
 			serviceRelationshipRepository.deleteById(serviceRelationshipKey);
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
-
-	@Override
-	public boolean update(ServiceRelationship ServiceRelationship) {
-		try {
-			serviceRelationshipRepository.save(ServiceRelationship);
 			return true;
 		} catch (Exception e) {
 			return false;

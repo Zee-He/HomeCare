@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.nuist.hospitalcare.entity.ServiceRelationship;
 import com.nuist.hospitalcare.entity.ServiceRelationshipKey;
 /**
@@ -20,18 +22,20 @@ public interface ServiceRelationshipRepository extends JpaRepository<ServiceRela
 	 * 
 	 * @param cid
 	 */
-	@Modifying
+	@Transactional
+	@Modifying(clearAutomatically = true)
 	@Query(nativeQuery = true, value = "delete from service_relationship where cid=?1")
-	void deleteByCid(Integer cid);
+	void deleteAllByCid(Integer cid);
 
 	/**
 	 * 删除该员工所有服务关系
 	 * 
 	 * @param eid
 	 */
-	@Modifying
+	@Transactional
+	@Modifying(clearAutomatically = true)
 	@Query(nativeQuery = true, value = "delete from service_relationship where eid=?1")
-	void deleteByServiceId(Integer serviceId);
+	void deleteAllByEid(Integer eid);
 
 	/**
 	 * 根据客户id、员工id组合分页查询

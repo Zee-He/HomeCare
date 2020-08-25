@@ -44,9 +44,9 @@ public class DependentServiceImpl implements DependentService {
 	}
 
 	@Override
-	public boolean deleteByCid(Integer cid) {
+	public boolean deleteAllByCid(Integer cid) {
 		try {
-			dependentRepository.deleteByCid(cid);
+			dependentRepository.deleteAllByCid(cid);
 			return true;
 		} catch (Exception e) {
 			return false;

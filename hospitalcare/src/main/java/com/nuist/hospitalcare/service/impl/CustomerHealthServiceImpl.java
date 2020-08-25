@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.nuist.hospitalcare.dao.CustomerHealthRepository;
 import com.nuist.hospitalcare.entity.CustomerHealth;
+import com.nuist.hospitalcare.entity.CustomerHealthKey;
 import com.nuist.hospitalcare.service.CustomerHealthService;
 
 /**
@@ -22,7 +23,8 @@ public class CustomerHealthServiceImpl implements CustomerHealthService {
 	
 	@Override
 	public boolean insert(CustomerHealth customerHealth) {
-		if(customerHealthRepository.existsById(customerHealth)) {
+		CustomerHealthKey customerHealthKey=new CustomerHealthKey(customerHealth.getCid(),customerHealth.getHealthRecordDate());
+		if(customerHealthRepository.existsById(customerHealthKey)) {
 			return false;
 		}
 		try {
@@ -34,9 +36,9 @@ public class CustomerHealthServiceImpl implements CustomerHealthService {
 	}
 
 	@Override
-	public boolean deleteByCid(Integer cid) {
+	public boolean deleteAllByCid(Integer cid) {
 		try {
-			customerHealthRepository.deleteByCid(cid);;
+			customerHealthRepository.deleteAllByCid(cid);;
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -45,11 +47,12 @@ public class CustomerHealthServiceImpl implements CustomerHealthService {
 
 	@Override
 	public boolean delete(CustomerHealth customerHealth) {
-		if(!customerHealthRepository.existsById(customerHealth)) {
+		CustomerHealthKey customerHealthKey=new CustomerHealthKey(customerHealth.getCid(),customerHealth.getHealthRecordDate());
+		if(!customerHealthRepository.existsById(customerHealthKey)) {
 			return false;
 		}
 		try {
-			customerHealthRepository.deleteById(customerHealth);
+			customerHealthRepository.deleteById(customerHealthKey);
 			return true;
 		} catch (Exception e) {
 			return false;

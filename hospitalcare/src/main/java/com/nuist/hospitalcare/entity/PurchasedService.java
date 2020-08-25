@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,20 +33,17 @@ public class PurchasedService implements Serializable {
 	 * 客户编号
 	 */
 	@Id
-	@NotBlank(message = "客户编号不能为空")
 	private Integer cid;
 
 	/**
 	 * 服务编号
 	 */
 	@Id
-	@NotBlank(message = "服务编号不能为空")
     private Integer serviceId;
 	
 	/**
-	 * 购买日期时间,前端自动获取当前日期
+	 * 购买日期时间
 	 */
-	@NotBlank(message = "购买日期不能为空")
     private Date pdate;
 
 }

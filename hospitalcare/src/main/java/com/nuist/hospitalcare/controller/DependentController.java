@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +26,7 @@ import com.nuist.hospitalcare.service.DependentService;
 @RestController
 @RequestMapping(value = "dependent")// 所有具有前缀dependent均路由到此控制器
 public class DependentController {
-	private static final int PAGE_SIZE=10;//分页查询每页大小
+	//private static final int PAGE_SIZE=10;//分页查询每页大小
 	@Autowired
 	private DependentService dependentService;
 	
@@ -35,7 +36,7 @@ public class DependentController {
 	 * @param bindingResult 
 	 * @return
 	 */
-	@PutMapping(value = "insert")
+	@PostMapping(value = "insert")
 	public ResultBean insert(@Validated Dependent dependent,BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			StringBuffer msgBuffer= new StringBuffer();
@@ -80,9 +81,9 @@ public class DependentController {
 	 * @param cid
 	 * @return
 	 */
-	@DeleteMapping(value = "deletebycid/{cid}")
-	public ResultBean deleteByCid(@PathVariable("cid")Integer cid) {
-		boolean flag=dependentService.deleteByCid(cid);
+	@DeleteMapping(value = "deleteallbycid/{cid}")
+	public ResultBean deleteAllByCid(@PathVariable("cid")Integer cid) {
+		boolean flag=dependentService.deleteAllByCid(cid);
 		if(flag) {
 			return new ResultBean(200,true,"删除成功","");
 		}else {
@@ -92,7 +93,7 @@ public class DependentController {
 	
 	
 	/**
-	 * 根据主键删除指定健康档案
+	 * 根据主键删除指定家属信息
 	 * @return
 	 */
 	@DeleteMapping(value = "delete")
@@ -110,20 +111,22 @@ public class DependentController {
 	 * @param page 页号
 	 * @return
 	 */
-	@GetMapping(value = "findbycid/{page}")
-	public ResultBean findByCid(Integer cid,@PathVariable("page")Integer page) {
-		Page<Dependent> dependentPage=dependentService.findByCid(cid, PageRequest.of(page, PAGE_SIZE));
+	@PostMapping(value = "findbycid")
+	public ResultBean findByCid(Integer cid,Integer page,Integer limit) {
+		page=page-1;
+		Page<Dependent> dependentPage=dependentService.findByCid(cid, PageRequest.of(page, limit));
 		return new ResultBean(200,true,"查询成功",dependentPage);
 	}
 	
 	/**
-	 * 分页查询所有健康档案
+	 * 分页查询所有家属信息
 	 * @param page 页号
 	 * @return
 	 */
-	@GetMapping(value = "findall/{page}")
-	public ResultBean findAll(@PathVariable("page")Integer page) {
-		Page<Dependent> customerHealthPage=dependentService.findAll(PageRequest.of(page, PAGE_SIZE));
+	@GetMapping(value = "findall")
+	public ResultBean findAll(Integer page,Integer limit) {
+		page=page-1;
+		Page<Dependent> customerHealthPage=dependentService.findAll(PageRequest.of(page, limit));
 		return new ResultBean(200,true,"分页查询成功",customerHealthPage);
 	}
 }

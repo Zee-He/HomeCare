@@ -1,5 +1,7 @@
 package com.nuist.hospitalcare.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Page;
@@ -10,8 +12,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nuist.hospitalcare.bean.ResultBean;
@@ -23,7 +27,7 @@ import com.nuist.hospitalcare.service.ServiceRelationshipService;
 @RequestMapping(value = "servicerelationship")// 所有具有前缀servicerelationship均路由到此控制器
 public class ServiceRelationshipController {
 
-	private static final int PAGE_SIZE=10;//分页查询每页大小
+	//private static final int PAGE_SIZE=10;//分页查询每页大小
 	@Autowired
 	private ServiceRelationshipService serviceRelationshipService;
 	
@@ -33,7 +37,7 @@ public class ServiceRelationshipController {
 	 * @param bindingResult 
 	 * @return
 	 */
-	@PutMapping(value = "insert")
+	@PostMapping(value = "insert")
 	public ResultBean insert(@Validated ServiceRelationship serviceRelationship,BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			StringBuffer msgBuffer= new StringBuffer();
@@ -57,20 +61,18 @@ public class ServiceRelationshipController {
 	 * @return
 	 */
 	@PutMapping(value = "update")
-	public ResultBean update(@Validated ServiceRelationship serviceRelationship,BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			StringBuffer msgBuffer= new StringBuffer();
-			for (FieldError iterable_element : bindingResult.getFieldErrors()) {
-				msgBuffer.append(iterable_element.getField()+":"+iterable_element.getDefaultMessage()+"\n");
-			}	
-			return new ResultBean(5006, false,msgBuffer.toString(), null);
-		}
-		boolean flag=serviceRelationshipService.update(serviceRelationship);
-		if(flag) {
-			return new ResultBean(200,true,"修改成功","");
-		}else {
-			return new ResultBean(5002,false,"修改失败","");
-		}
+	public ResultBean update(@RequestParam Map<String, String> source) {
+
+		System.out.println(source);
+		System.out.println(source.size());
+		System.out.println(source.get("key"));
+		return null;
+//		boolean flag=serviceRelationshipService.update(serviceRelationship);
+//		if(flag) {
+//			return new ResultBean(200,true,"修改成功","");
+//		}else {
+//			return new ResultBean(5002,false,"修改失败","");
+//		}
 	}
 	
 	/**
@@ -78,9 +80,9 @@ public class ServiceRelationshipController {
 	 * @param cid
 	 * @return
 	 */
-	@DeleteMapping(value = "deletebycid/{cid}")
-	public ResultBean deleteByCid(@PathVariable("cid")Integer cid) {
-		boolean flag=serviceRelationshipService.deleteByCid(cid);
+	@DeleteMapping(value = "deleteallbycid/{cid}")
+	public ResultBean deleteAllByCid(@PathVariable("cid")Integer cid) {
+		boolean flag=serviceRelationshipService.deleteAllByCid(cid);
 		if(flag) {
 			return new ResultBean(200,true,"删除成功","");
 		}else {
@@ -93,9 +95,9 @@ public class ServiceRelationshipController {
 	 * @param eid
 	 * @return
 	 */
-	@DeleteMapping(value = "deletebyeid/{eid}")
-	public ResultBean deleteByServiceId(@PathVariable("eid")Integer eid) {
-		boolean flag=serviceRelationshipService.deleteByEid(eid);
+	@DeleteMapping(value = "deleteallbyeid/{eid}")
+	public ResultBean deleteAllByEid(@PathVariable("eid")Integer eid) {
+		boolean flag=serviceRelationshipService.deleteAllByEid(eid);
 		if(flag) {
 			return new ResultBean(200,true,"删除成功","");
 		}else {
@@ -124,9 +126,10 @@ public class ServiceRelationshipController {
 	 * @param page
 	 * @return
 	 */
-	@GetMapping(value = "findbycideid/{page}")
-	public ResultBean findByCidServiceId(Integer cid,Integer eid,@PathVariable("page")Integer page) {
-		Page<ServiceRelationship> serviceRelationshipPage=serviceRelationshipService.findByCidEid(cid, eid, PageRequest.of(page, PAGE_SIZE));
+	@PostMapping(value = "findbycideid")
+	public ResultBean findByCidServiceId(Integer cid,Integer eid,Integer page,Integer limit) {
+		page=page-1;
+		Page<ServiceRelationship> serviceRelationshipPage=serviceRelationshipService.findByCidEid(cid, eid, PageRequest.of(page, limit));
 		return new ResultBean(200,true,"查询成功",serviceRelationshipPage);
 	}
 	
@@ -135,12 +138,10 @@ public class ServiceRelationshipController {
 	 * @param page 页号
 	 * @return
 	 */
-	@GetMapping(value = "findall/{page}")
-	public ResultBean findAll(@PathVariable("page")Integer page) {
-		Page<ServiceRelationship> serviceRelationshipPage=serviceRelationshipService.findAll(PageRequest.of(page, PAGE_SIZE));
+	@GetMapping(value = "findall")
+	public ResultBean findAll(Integer page,Integer limit) {
+		page=page-1;
+		Page<ServiceRelationship> serviceRelationshipPage=serviceRelationshipService.findAll(PageRequest.of(page, limit));
 		return new ResultBean(200,true,"分页查询成功",serviceRelationshipPage);
 	}
-	
-	
-	
 }

@@ -76,6 +76,7 @@
                     type="text"
                     name="serviceDate"
                     id="serviceDate"
+                    autocomplete="off"
                     lay-verify="required"
                     lay-reqtext="服务上架日期不能为空"
                     value=""
@@ -110,11 +111,12 @@
     function child(params) {
 
         layui.use(["form", "util", "laydate"], () => {
-            // 日期选择器控件
+
             layui.laydate.render({
                 elem: '#serviceDate' //指定元素
                 ,type: "datetime"
                 ,format: "yyyy-MM-dd HH:mm:ss"
+                ,trigger: 'click'
             });
             // console.log(typeof(params))
             // params是父页面传过来的对象，可以打印但是不能直接用于复制
@@ -145,8 +147,6 @@
 
         //监听提交
         form.on("submit(saveBtn)", function (data) {
-            let t = JSON.stringify(data.field)
-            console.log(t)
             // TODO 执行修改
             $.ajax(
                 HC.packAjaxData({

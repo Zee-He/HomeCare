@@ -25,7 +25,7 @@ public interface CustomerHealthService {
 	 * @param cid 客户编号
 	 * @return
 	 */
-	boolean deleteByCid(Integer cid);
+	boolean deleteAllByCid(Integer cid);
 	
 	/**
 	 * 根据主键删除健康档案

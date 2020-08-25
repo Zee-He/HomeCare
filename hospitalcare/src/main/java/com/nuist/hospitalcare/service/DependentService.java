@@ -32,7 +32,7 @@ public interface DependentService {
 	 * @param cid 客户编号
 	 * @return
 	 */
-	boolean deleteByCid(Integer cid);
+	boolean deleteAllByCid(Integer cid);
 	
 	/**
 	 * 根据主键删除家属信息

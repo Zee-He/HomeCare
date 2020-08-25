@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
     <link rel="stylesheet" href="../../lib/layui-v2.5.5/css/layui.css" media="all"/>
     <link rel="stylesheet" href="../../css/public.css" media="all"/>
+    <script src="../../js/common.js" charset="utf-8"></script>
     <style>
         body {
             background-color: #ffffff;
@@ -15,73 +16,86 @@
     </style>
 </head>
 <body>
-<div class="layui-form layuimini-form">
+<div class="layui-form layuimini-form" lay-filter="purchased_service_mod">
     <div class="layui-form-item">
-        <label class="layui-form-label required">服务名称</label>
+        <label class="layui-form-label ">服务编号</label>
+        <div class="layui-input-block">
+            <input
+                    type="number"
+                    name="serviceId"
+                    readonly="readonly"
+                    value=""
+                    class="layui-input"
+            />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">服务名称</label>
         <div class="layui-input-block">
             <input
                     type="text"
                     name="serviceName"
-                    lay-verify="required"
-                    lay-reqtext="服务名称不能为空"
-                    placeholder="请输入服务名称"
+                    readonly="readonly"
                     value=""
                     class="layui-input"
             />
-            <!--					<tip>请填写自己的真实姓名</tip>-->
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label ">描述</label>
         <div class="layui-input-block">
-            <textarea name="serviceRemark" placeholder="请输入服务描述" class="layui-textarea"></textarea>
+            <textarea name="serviceRemark" readonly="readonly" class="layui-textarea"></textarea>
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">状态</label>
-        <div class="layui-input-block">
-            <input type="radio" name="serviceStatus" value="可用" title="可用" checked=""/>
-            <input type="radio" name="serviceStatus" value="不可用" title="不可用"/>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label required">售价</label>
+        <label class="layui-form-label">售价</label>
         <div class="layui-input-block">
             <input
                     type="number"
                     name="servicePrice"
-                    lay-verify="servicePrice"
-                    placeholder="请输入售价"
+                    readonly="readonly"
                     value=""
                     class="layui-input"
             />
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">服务上架日期</label>
-        <div class="layui-input-block">
-            <input
-                    type="text"
-                    name="serviceDate"
-                    id="serviceDate"
-                    autocomplete="off"
-                    lay-verify="required"
-                    lay-reqtext="服务上架日期不能为空"
-                    placeholder="请设置服务上架日期"
-                    value=""
-                    class="layui-input"
-            />
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label required">服务有效时间/天</label>
+        <label class="layui-form-label ">服务有效时间/天</label>
         <div class="layui-input-block">
             <input
                     type="text"
                     name="serviceValidTime"
                     lay-verify="required"
-                    lay-reqtext="服务有效时间不能为空"
-                    placeholder="请输入服务有效时间"
+                    readonly="readonly"
+                    value=""
+                    class="layui-input"
+            />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">客户编号</label>
+        <div class="layui-input-block">
+            <input
+                    type="text"
+                    name="cid"
+                    lay-verify="required"
+                    lay-reqtext="客户编号不能为空"
+                    placeholder="请输入客户编号"
+                    value=""
+                    class="layui-input"
+            />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">购买日期</label>
+        <div class="layui-input-block">
+            <input
+                    type="text"
+                    name="pdate"
+                    id="pdate"
+                    autocomplete="off"
+                    lay-verify="required"
+                    lay-reqtext="购买日期不能为空"
                     value=""
                     class="layui-input"
             />
@@ -89,45 +103,44 @@
     </div>
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认购买</button>
         </div>
     </div>
 </div>
+
 <script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
-<script src="../../js/common.js"></script>
 <script>
-    layui.use(["form", "laydate"], () => {
-        layui.laydate.render({
-            elem: '#serviceDate' //指定元素
-            , type: "datetime"
-            , format: "yyyy-MM-dd HH:mm:ss"
-            ,trigger: 'click'
-        });
-    })
+
+    function child(params) {
+        layui.use(["form", "laydate"], () => {
+            layui.laydate.render({
+                elem: '#pdate' //指定元素
+                , type: "datetime"
+                , format: "yyyy-MM-dd HH:mm:ss"
+                , trigger: 'click'
+            });
+            // console.log(typeof(params))
+            // params是父页面传过来的对象，可以打印但是不能直接用于复制
+            // 原因不明，但深拷贝一次可以解决这个问题
+            params = JSON.parse(JSON.stringify(params))
+            layui.form.val('purchased_service_mod', params)
+        })
+    }
+
     layui.use(["form"], function () {
         var form = layui.form,
             layer = layui.layer,
             $ = layui.$;
 
         // 自定义验证格式，进阶
-        form.verify({
-            // 价格
-            servicePrice: (value) => {
-                if (value.length === 0) {
-                    return "售价不能为空";
-                }
-                if (value < 0) {
-                    return "售价必须大于0";
-                }
-            },
-        });
+        form.verify({});
 
         //监听提交
         form.on("submit(saveBtn)", function (data) {
-            // TODO 执行添加
+            // TODO 执行购买
             $.ajax(
                 HC.packAjaxData({
-                    url: "service/insert",
+                    url: "purchasedservice/insert",
                     type: "post",
                     data: data.field,
                     success: (r) => {

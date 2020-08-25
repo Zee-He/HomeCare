@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
  */
 @Entity
 @Table(name = "customer_health")
-@IdClass(CustomerHealth.class)
+@IdClass(CustomerHealthKey.class)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,13 +31,11 @@ public class CustomerHealth implements Serializable {
 	 * 客户编号
 	 */
 	@Id
-	@NotBlank(message = "客户编号不能为空")
 	private Integer cid;
 
 	/**
 	 * 健康档案创建日期
 	 */
-	@NotBlank(message = "创建不能为空")
     private Date healthRecordDate;
 
     /**

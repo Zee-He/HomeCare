@@ -9,7 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +25,7 @@ import com.nuist.hospitalcare.service.CustomerHealthService;
 @RestController
 @RequestMapping(value = "customerhealth") // 所有具有前缀customerhealth均路由到此控制器
 public class CustomerHealthController {
-	private static final int PAGE_SIZE=10;//分页查询每页大小
+	//private static final int PAGE_SIZE=10;//分页查询每页大小
 	@Autowired
 	private CustomerHealthService customerHealthService;
 	
@@ -35,7 +35,7 @@ public class CustomerHealthController {
 	 * @param bindingResult 
 	 * @return
 	 */
-	@PutMapping(value = "insert")
+	@PostMapping(value = "insert")
 	public ResultBean insert(@Validated CustomerHealth customerHealth,BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			StringBuffer msgBuffer= new StringBuffer();
@@ -57,9 +57,9 @@ public class CustomerHealthController {
 	 * @param cid
 	 * @return
 	 */
-	@DeleteMapping(value = "deletebycid/{cid}")
-	public ResultBean deleteByCid(@PathVariable("cid")Integer cid) {
-		boolean flag=customerHealthService.deleteByCid(cid);
+	@DeleteMapping(value = "deleteallbycid/{cid}")
+	public ResultBean deleteAllByCid(@PathVariable("cid")Integer cid) {
+		boolean flag=customerHealthService.deleteAllByCid(cid);
 		if(flag) {
 			return new ResultBean(200,true,"删除成功","");
 		}else {
@@ -87,9 +87,10 @@ public class CustomerHealthController {
 	 * @param page 页号
 	 * @return
 	 */
-	@GetMapping(value = "findbycid/{page}")
-	public ResultBean findByCid(Integer cid,@PathVariable("page")Integer page) {
-		Page<CustomerHealth> customerHealthPage=customerHealthService.findByCid(cid, PageRequest.of(page, PAGE_SIZE));
+	@PostMapping(value = "findbycid")
+	public ResultBean findByCid(Integer cid,Integer page,Integer limit) {
+		page=page-1;
+		Page<CustomerHealth> customerHealthPage=customerHealthService.findByCid(cid, PageRequest.of(page, limit));
 		return new ResultBean(200,true,"查询成功",customerHealthPage);
 	}
 	
@@ -98,9 +99,10 @@ public class CustomerHealthController {
 	 * @param page 页号
 	 * @return
 	 */
-	@GetMapping(value = "findall/{page}")
-	public ResultBean findAll(@PathVariable("page")Integer page) {
-		Page<CustomerHealth> customerHealthPage=customerHealthService.findAll(PageRequest.of(page, PAGE_SIZE));
+	@GetMapping(value = "findall")
+	public ResultBean findAll(Integer page,Integer limit) {
+		page=page-1;
+		Page<CustomerHealth> customerHealthPage=customerHealthService.findAll(PageRequest.of(page, limit));
 		return new ResultBean(200,true,"分页查询成功",customerHealthPage);
 	}
 }

@@ -25,14 +25,14 @@ public interface ServiceRelationshipService {
 	 * @param cid 客户编号
 	 * @return
 	 */
-	boolean deleteByCid(Integer cid);
+	boolean deleteAllByCid(Integer cid);
 	
 	/**
 	 * 根据员工编号删除该员工的所有服务关系
 	 * @param eid 服务编号
 	 * @return
 	 */
-	boolean deleteByEid(Integer eid);
+	boolean deleteAllByEid(Integer eid);
 	
 	/**
 	 * 根据主键删除服务关系

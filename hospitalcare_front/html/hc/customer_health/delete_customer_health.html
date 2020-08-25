@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>layui</title>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="stylesheet" href="../../lib/layui-v2.5.5/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/public.css" media="all"/>
+    <script src="../../js/common.js" charset="utf-8"></script>
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form layuimini-form" lay-filter="customer_health_mod">
+    <div class="layui-form-item">
+        <label class="layui-form-label ">客户编号</label>
+        <div class="layui-input-block">
+            <input
+                    type="number"
+                    name="cid"
+                    readonly="readonly"
+                    value=""
+                    class="layui-input"
+            />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label ">建档日期</label>
+        <div class="layui-input-block">
+            <input
+                    type="text"
+                    name="healthRecordDate"
+                    id="healthRecordDate"
+                    readonly="readonly"
+                    value=""
+                    class="layui-input"
+            />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label ">健康档案</label>
+        <div class="layui-input-block">
+            <textarea name="healthRecord"
+                      readonly="readonly"
+                      value=""
+                      class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-danger" lay-submit lay-filter="deleteBtn">删除该档案</button>
+            <button class="layui-btn layui-btn-danger" lay-submit lay-filter="deleteAllByCidBtn">删除该用户所有档案</button>
+        </div>
+    </div>
+</div>
+
+<script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+<script>
+    function child(params) {
+        layui.use(["form", "util", "laydate"], () => {
+            layui.laydate.render({
+                elem: '#healthRecordDate' //指定元素
+                , type: "datetime"
+                , format: "yyyy-MM-dd HH:mm:ss"
+            });
+            // console.log(typeof(params))
+            // params是父页面传过来的对象，可以打印但是不能直接用于复制
+            // 原因不明，但深拷贝一次可以解决这个问题
+            params = JSON.parse(JSON.stringify(params))
+            params.healthRecordDate = layui.util.toDateString(params.healthRecordDate)
+            layui.form.val('customer_health_mod', params)
+        })
+    }
+
+    layui.use(["form"], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+
+        // 自定义验证格式，进阶
+        // form.verify({
+        // });
+
+        //监听提交
+        form.on("submit(deleteBtn)", function (data) {
+            // TODO 执行删除
+            layer.confirm("确认删除该条记录？", function (index) {
+                $.ajax(
+                    HC.packAjaxData({
+                        url: "customerhealth/delete",
+                        type: "delete",
+                        data: data.field,
+                        success: (r) => {
+                            if (r.successed) {
+                                // 关闭页面
+                                let index = layer.alert(
+                                    r.message,
+                                    () => {
+                                        // 关闭弹出层
+                                        layer.close(index);
+
+                                        var iframeIndex = parent.layer.getFrameIndex(window.name);
+                                        parent.layer.close(iframeIndex);
+                                    }
+                                );
+                            } else {
+                                layer.alert(r.message);
+                            }
+                        },
+                    })
+                );
+                layer.close(index);
+                return false;
+            });
+        });
+        //按客户编号删除
+        form.on("submit(deleteAllByCidBtn)", function (data) {
+            // TODO 执行删除
+            layer.confirm("确认删除客户" + data.field.cid + "的所有购买记录？", function (index) {
+                $.ajax(
+                    HC.packAjaxData({
+                        url: "customerhealth/deleteallbycid/" + data.field.cid,
+                        type: "delete",
+                        success: (r) => {
+                            if (r.successed) {
+                                // 关闭页面
+                                let index = layer.alert(
+                                    r.message,
+                                    () => {
+                                        // 关闭弹出层
+                                        layer.close(index);
+
+                                        var iframeIndex = parent.layer.getFrameIndex(window.name);
+                                        parent.layer.close(iframeIndex);
+                                    }
+                                );
+                            } else {
+                                layer.alert(r.message);
+                            }
+                        },
+                    })
+                );
+                layer.close(index);
+                return false;
+            });
+        });
+    });
+</script>
+</body>
+</html>

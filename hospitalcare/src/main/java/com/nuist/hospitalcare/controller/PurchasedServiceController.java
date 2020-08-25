@@ -1,5 +1,6 @@
 package com.nuist.hospitalcare.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -9,7 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,7 +28,7 @@ import com.nuist.hospitalcare.service.PurchasedServiceService;
 @RequestMapping(value = "purchasedservice")// 所有具有前缀purchasedservice均路由到此控制器
 public class PurchasedServiceController {
 
-	private static final int PAGE_SIZE=10;//分页查询每页大小
+	//private static final int PAGE_SIZE=10;//分页查询每页大小
 	@Autowired
 	private PurchasedServiceService purchasedServiceService;
 	
@@ -37,8 +38,9 @@ public class PurchasedServiceController {
 	 * @param bindingResult 
 	 * @return
 	 */
-	@PutMapping(value = "insert")
+	@PostMapping(value = "insert")
 	public ResultBean insert(@Validated PurchasedService purchasedService,BindingResult bindingResult) {
+//		System.out.println(purchasedService);
 		if (bindingResult.hasErrors()) {
 			StringBuffer msgBuffer= new StringBuffer();
 			for (FieldError iterable_element : bindingResult.getFieldErrors()) {
@@ -59,9 +61,9 @@ public class PurchasedServiceController {
 	 * @param cid
 	 * @return
 	 */
-	@DeleteMapping(value = "deletebycid/{cid}")
-	public ResultBean deleteByCid(@PathVariable("cid")Integer cid) {
-		boolean flag=purchasedServiceService.deleteByCid(cid);
+	@DeleteMapping(value = "deleteallbycid/{cid}")
+	public ResultBean deleteAllByCid(@PathVariable("cid")Integer cid) {
+		boolean flag=purchasedServiceService.deleteAllByCid(cid);
 		if(flag) {
 			return new ResultBean(200,true,"删除成功","");
 		}else {
@@ -74,9 +76,9 @@ public class PurchasedServiceController {
 	 * @param serviceId
 	 * @return
 	 */
-	@DeleteMapping(value = "deletebyserviceid/{serviceId}")
+	@DeleteMapping(value = "deleteallbyserviceid/{serviceId}")
 	public ResultBean deleteByServiceId(@PathVariable("serviceId")Integer serviceId) {
-		boolean flag=purchasedServiceService.deleteByServiceId(serviceId);
+		boolean flag=purchasedServiceService.deleteAllByServiceId(serviceId);
 		if(flag) {
 			return new ResultBean(200,true,"删除成功","");
 		}else {
@@ -90,6 +92,7 @@ public class PurchasedServiceController {
 	 */
 	@DeleteMapping(value = "delete")
 	public ResultBean delete(PurchasedServiceKey purchasedServiceKey) {
+		System.out.println(purchasedServiceKey);
 		boolean flag=purchasedServiceService.delete(purchasedServiceKey);
 		if(flag) {
 			return new ResultBean(200,true,"删除成功","");
@@ -105,9 +108,10 @@ public class PurchasedServiceController {
 	 * @param page
 	 * @return
 	 */
-	@GetMapping(value = "findbycidserviceid/{page}")
-	public ResultBean findByCidServiceId(Integer cid,Integer serviceId,@PathVariable("page")Integer page) {
-		Page<PurchasedService> purchasedServicePage=purchasedServiceService.findByCidServiceId(cid, serviceId, PageRequest.of(page, PAGE_SIZE));
+	@PostMapping(value = "findbycidserviceid")
+	public ResultBean findByCidServiceId(Integer cid,Integer serviceId,Integer page,Integer limit) {
+		page=page-1;
+		Page<PurchasedService> purchasedServicePage=purchasedServiceService.findByCidServiceId(cid, serviceId, PageRequest.of(page, limit));
 		return new ResultBean(200,true,"查询成功",purchasedServicePage);
 	}
 	
@@ -116,9 +120,10 @@ public class PurchasedServiceController {
 	 * @param page 页号
 	 * @return
 	 */
-	@GetMapping(value = "findall/{page}")
-	public ResultBean findAll(@PathVariable("page")Integer page) {
-		Page<PurchasedService> purchasedServicePage=purchasedServiceService.findAll(PageRequest.of(page, PAGE_SIZE));
+	@GetMapping(value = "findall")
+	public ResultBean findAll(Integer page,Integer limit) {
+		page=page-1;
+		Page<PurchasedService> purchasedServicePage=purchasedServiceService.findAll(PageRequest.of(page, limit));
 		return new ResultBean(200,true,"分页查询成功",purchasedServicePage);
 	}
 }
