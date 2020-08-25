@@ -89,7 +89,10 @@ public class ServiceRelationshipServiceImpl implements ServiceRelationshipServic
 		if(eid!=null&&eid<1) {
 			eid=null;
 		}
-		return serviceRelationshipRepository.findByCidEid(cid, eid, pageable);
+		if (cid == null && eid == null) {
+			return serviceRelationshipRepository.findAll(pageable);
+		}
+		return serviceRelationshipRepository.findByCidOrEid(cid, eid, pageable);
 	}
 
 	@Override

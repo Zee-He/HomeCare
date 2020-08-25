@@ -19,7 +19,7 @@ public class ServiceRelationshipJpaDaoTest2 {
 	
 	@Test
 	public void test_select() {
-		Page<ServiceRelationship> servicePage = serviceRelationshipRepository.findByCidEid(1, 10, PageRequest.of(0, 10));
+		Page<ServiceRelationship> servicePage = serviceRelationshipRepository.findByCidOrEid(1, 10, PageRequest.of(0, 10));
 		
 		System.out.println(servicePage.getContent());
 		log.info("测试通过");

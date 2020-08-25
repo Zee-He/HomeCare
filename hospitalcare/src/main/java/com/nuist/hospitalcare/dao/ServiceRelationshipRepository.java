@@ -1,6 +1,5 @@
 package com.nuist.hospitalcare.dao;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -45,7 +44,5 @@ public interface ServiceRelationshipRepository extends JpaRepository<ServiceRela
 	 * @param pageable
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "select * from service_relationship where if(IFNULL(?1,'') !='',cid=?1,1=1) and if(IFNULL(?2,'') !='',eid=?2,1=1)")
-	Page<ServiceRelationship> findByCidEid(@Param("cid") Integer cid, @Param("eid") Integer eid,
-			Pageable pageable);
+	Page<ServiceRelationship> findByCidOrEid(Integer cid,  Integer eid, Pageable pageable);
 }

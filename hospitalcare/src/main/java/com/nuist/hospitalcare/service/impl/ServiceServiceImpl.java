@@ -65,7 +65,7 @@ public class ServiceServiceImpl implements ServiceService {
 
 	@Override
 	public Page<Service> findByName(String serviceName, Pageable pageable) {
-		return serviceRepository.findByNameLike(serviceName, pageable);
+		return serviceRepository.findByServiceNameContaining(serviceName, pageable);
 	}
 
 	@Override
