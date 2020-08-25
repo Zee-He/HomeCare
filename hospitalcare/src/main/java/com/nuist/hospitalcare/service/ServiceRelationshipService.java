@@ -46,7 +46,7 @@ public interface ServiceRelationshipService {
 	 * @param ServiceRelationship 服务关系
 	 * @return
 	 */
-	boolean update(ServiceRelationship ServiceRelationship);
+	boolean update(ServiceRelationshipKey oldRelationship, ServiceRelationship newRelationship);
 	
 	/**
 	 * 根据客户编号，服务编号 组合分页查询已购服务记录

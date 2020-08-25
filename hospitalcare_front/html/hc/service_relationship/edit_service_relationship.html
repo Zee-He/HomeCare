@@ -55,7 +55,8 @@
 <script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
 <script>
 
-    var source=new Map();
+    // var source=new Map();
+    let old = null;
 
     function child(params) {
         layui.use(["form"], () => {
@@ -64,7 +65,8 @@
             // 原因不明，但深拷贝一次可以解决这个问题
             params = JSON.parse(JSON.stringify(params))
             layui.form.val('service_relationship_mod', params)
-            source.set("key",params)
+            // source.set("key",params)
+            old = params;
         })
     }
 
@@ -79,14 +81,38 @@
 
         //监听提交
         form.on("submit(saveBtn)", function (data) {
-            source.set("entity",data.field)
-            console.log(source);
+            let field = {
+                cid: +data.field.cid,
+                eid: +data.field.eid
+            }
+            if (JSON.stringify(old) === JSON.stringify(field)) {
+                let index = layer.alert(
+                    "没有任何修改",
+                    () => {
+                        // 关闭弹出层
+                        layer.close(index);
+                        var iframeIndex = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(iframeIndex);
+                    }
+                );
+                return false;
+            }
+            // console.log(data.field)
+            // return false;
+            // source.set("entity",data.field)
+            // console.log(source);
             // TODO 执行提交
             $.ajax(
                 HC.packAjaxData({
                     url: "servicerelationship/update",
                     type: "put",
-                    data: JSON.stringify(source),
+                    data: {
+                        // 使用序列化的数据同时提交两个对象，服务器负责解析
+                        update:JSON.stringify({
+                            old:old,
+                            new:field
+                        })
+                    },
                     success: (r) => {
                         if (r.successed) {
                             // 关闭页面

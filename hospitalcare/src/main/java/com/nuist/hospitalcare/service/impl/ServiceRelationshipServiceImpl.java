@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nuist.hospitalcare.dao.ServiceRelationshipRepository;
 import com.nuist.hospitalcare.entity.ServiceRelationship;
@@ -36,12 +37,26 @@ public class ServiceRelationshipServiceImpl implements ServiceRelationshipServic
 	}
 	
 	@Override
-	public boolean update(ServiceRelationship serviceRelationship) {
+	@Transactional
+	public boolean update(ServiceRelationshipKey oldRelationship, ServiceRelationship newRelationship) {
 //		if (!serviceRelationshipRepository.existsById(serviceRelationshipKey)){
 //			return false;
 //		}
+		// 确认旧关系的存在
+		if (!serviceRelationshipRepository.existsById(oldRelationship)) {
+			return false;
+		}
+		
+		// 确认新关系不存在
+		if (serviceRelationshipRepository.existsById(new ServiceRelationshipKey(newRelationship.getCid(), newRelationship.getEid()))) {
+			return false;
+		}
+		
 		try {
-			serviceRelationshipRepository.save(serviceRelationship);
+			// 首先删除旧关系
+			serviceRelationshipRepository.deleteById(oldRelationship);
+			// 尝试插入新关系
+			serviceRelationshipRepository.save(newRelationship);
 			return true;
 		} catch (Exception e) {
 			return false;

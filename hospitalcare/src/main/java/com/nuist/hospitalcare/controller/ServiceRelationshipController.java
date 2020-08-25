@@ -1,7 +1,5 @@
 package com.nuist.hospitalcare.controller;
 
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Page;
@@ -15,9 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.nuist.hospitalcare.bean.ResultBean;
 import com.nuist.hospitalcare.entity.ServiceRelationship;
 import com.nuist.hospitalcare.entity.ServiceRelationshipKey;
@@ -61,18 +60,18 @@ public class ServiceRelationshipController {
 	 * @return
 	 */
 	@PutMapping(value = "update")
-	public ResultBean update(@RequestParam Map<String, String> source) {
-
-		System.out.println(source);
-		System.out.println(source.size());
-		System.out.println(source.get("key"));
-		return null;
-//		boolean flag=serviceRelationshipService.update(serviceRelationship);
-//		if(flag) {
-//			return new ResultBean(200,true,"修改成功","");
-//		}else {
-//			return new ResultBean(5002,false,"修改失败","");
-//		}
+	public ResultBean update(String update) {
+		JSONObject t = JSON.parseObject(update);
+		System.out.println(t);
+		ServiceRelationshipKey oldRelationship = JSON.parseObject(t.getString("old"), ServiceRelationshipKey.class);
+		ServiceRelationship newRelationship = JSON.parseObject(t.getString("new"), ServiceRelationship.class);
+		
+		boolean flag=serviceRelationshipService.update(oldRelationship, newRelationship);
+		if(flag) {
+			return new ResultBean(200,true,"修改成功","");
+		}else {
+			return new ResultBean(200,false,"修改失败","");
+		}
 	}
 	
 	/**
