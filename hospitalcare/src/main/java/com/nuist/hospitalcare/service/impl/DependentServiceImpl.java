@@ -79,6 +79,10 @@ public class DependentServiceImpl implements DependentService {
 		if(cid!=null&&cid<1) {
 			cid=null;
 		}
+		
+		if (cid == null) {
+			return dependentRepository.findAll(pageable);
+		}
 		return dependentRepository.findByCid(cid, pageable);
 	}
 

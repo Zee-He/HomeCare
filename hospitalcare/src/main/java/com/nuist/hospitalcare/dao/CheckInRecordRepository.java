@@ -8,6 +8,6 @@ import com.nuist.hospitalcare.entity.CheckInRecord;
 import java.util.Date;
 
 public interface CheckInRecordRepository extends JpaRepository<CheckInRecord, CheckInRecord> {
-    Page<CheckInRecord> findByCidAndBidAndCheckinDate(Integer cid, Integer bid, Date checkinDate, Pageable pageable);
-
+    Page<CheckInRecord> findByCidOrBidOrCheckinDate(Integer cid, Integer bid, Date checkinDate, Pageable pageable);
+    
 }

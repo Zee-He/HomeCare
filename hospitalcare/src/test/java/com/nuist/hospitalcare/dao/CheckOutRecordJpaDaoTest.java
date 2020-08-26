@@ -20,7 +20,7 @@ public class CheckOutRecordJpaDaoTest {
 	
 	@Test
 	public void name() {
-		Page<CheckOutRecord> checkPage = checkOutRecordRepository.findByCidAndBidAndCheckoutDate(5, 2, new Date(), PageRequest.of(0, 2));
+		Page<CheckOutRecord> checkPage = checkOutRecordRepository.findByCidOrBidOrCheckoutDate(5, 2, new Date(), PageRequest.of(0, 2));
 		System.out.println(checkPage.getContent());
 		log.info("测试通过");
 	}

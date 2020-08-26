@@ -1,6 +1,5 @@
 package com.nuist.hospitalcare.dao;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,7 +31,6 @@ public interface DependentRepository extends JpaRepository<Dependent, Dependent>
 	 * @param pageable
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "select * from dependent where if(IFNULL(?1,'') !='',cid=?1,1=1)")
-	Page<Dependent> findByCid(@Param("cid")Integer cid,Pageable pageable);
+	Page<Dependent> findByCid(Integer cid,Pageable pageable);
 	
 }

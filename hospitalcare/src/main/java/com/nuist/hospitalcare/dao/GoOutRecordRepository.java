@@ -8,5 +8,5 @@ import com.nuist.hospitalcare.entity.GoOutRecord;
 import java.util.Date;
 
 public interface GoOutRecordRepository extends JpaRepository<GoOutRecord, GoOutRecord> {
-    Page<GoOutRecord> findByCidAndBidAndGoOutDateAndGoBackDate(Integer cid, Integer bid, Date goOutDate, Date goBackDate, Pageable pageable);
+    Page<GoOutRecord> findByCidOrBidOrGoOutDateOrGoBackDate(Integer cid, Integer bid, Date goOutDate, Date goBackDate, Pageable pageable);
 }

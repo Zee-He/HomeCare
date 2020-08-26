@@ -8,5 +8,5 @@ import com.nuist.hospitalcare.entity.CheckOutRecord;
 import java.util.Date;
 
 public interface CheckOutRecordRepository extends JpaRepository<CheckOutRecord, CheckOutRecord> {
-    Page<CheckOutRecord> findByCidAndBidAndCheckoutDate(Integer cid, Integer bid, Date checkoutDate, Pageable pageable);
+    Page<CheckOutRecord> findByCidOrBidOrCheckoutDate(Integer cid, Integer bid, Date checkoutDate, Pageable pageable);
 }

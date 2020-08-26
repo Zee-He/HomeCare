@@ -59,6 +59,17 @@ public class CheckOutRecordServiceImpl implements CheckOutRecordService {
 
     @Override
     public Page<CheckOutRecord> findByCidAndBidAndCheckoutDate(Integer cid, Integer bid, Date checkoutDate, Pageable pageable) {
-        return checkoutRecordRepository.findByCidAndBidAndCheckoutDate(cid, bid, checkoutDate, pageable);
+    	if (cid != null && cid < 1) {
+			cid = null;
+		}
+    	
+    	if (bid != null && bid < 1) {
+    		bid = null;
+		}
+    	
+    	if (cid == null && bid == null && checkoutDate == null) {
+    		return checkoutRecordRepository.findAll(pageable);
+		}
+        return checkoutRecordRepository.findByCidOrBidOrCheckoutDate(cid, bid, checkoutDate, pageable);
     }
 }

@@ -59,6 +59,17 @@ public class GoOutRecordServiceImpl implements GoOutRecordService {
 
     @Override
     public Page<GoOutRecord> findByCidAndBidAndGoOutDateAndGoBackDate(Integer cid, Integer bid, Date goOutDate, Date goBackDate, Pageable pageable) {
-        return goOutRecordRepository.findByCidAndBidAndGoOutDateAndGoBackDate(cid, bid,goOutDate,goBackDate, pageable);
+    	if (cid != null && cid < 1) {
+			cid = null;
+		}
+    	
+    	if (bid != null && bid < 1) {
+    		bid = null;
+		}
+    	
+    	if (cid == null && bid == null && goBackDate == null && goOutDate == null) {
+    		return goOutRecordRepository.findAll(pageable);
+		}
+    	return goOutRecordRepository.findByCidOrBidOrGoOutDateOrGoBackDate(cid, bid,goOutDate,goBackDate, pageable);
     }
 }

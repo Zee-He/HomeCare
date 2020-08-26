@@ -64,6 +64,11 @@ public class CustomerHealthServiceImpl implements CustomerHealthService {
 		if(cid!=null&&cid<1) {
 			cid=null;
 		}
+		
+		if (cid == null) {
+			return customerHealthRepository.findAll(pageable);
+		}
+		
 		return customerHealthRepository.findByCid(cid, pageable);
 	}
 

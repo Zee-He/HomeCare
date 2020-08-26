@@ -59,6 +59,18 @@ public class CheckInRecordServiceImpl implements CheckInRecordService {
 
     @Override
     public Page<CheckInRecord> findByCidAndBidAndCheckinDate(Integer cid, Integer bid, Date checkinDate, Pageable pageable) {
-        return checkinRecordRepository.findByCidAndBidAndCheckinDate(cid, bid, checkinDate, pageable);
+    	if (cid != null && cid < 1) {
+			cid = null;
+		}
+    	
+    	if (bid != null && bid < 1) {
+    		bid = null;
+		}
+    	
+    	if (cid == null && bid == null && checkinDate == null) {
+			return checkinRecordRepository.findAll(pageable);
+		}
+    	
+        return checkinRecordRepository.findByCidOrBidOrCheckinDate(cid, bid, checkinDate, pageable);
     }
 }
