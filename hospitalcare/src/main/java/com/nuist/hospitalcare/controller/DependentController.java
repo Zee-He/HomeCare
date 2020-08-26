@@ -112,7 +112,7 @@ public class DependentController {
 	 * @param page 页号
 	 * @return
 	 */
-	@PostMapping(value = "findbycid")
+	@GetMapping(value = "findbycid")
 	public ResultBean findByCid(Integer cid,Integer page,Integer limit) {
 		page=page-1;
 		Page<Dependent> dependentPage=dependentService.findByCid(cid, PageRequest.of(page, limit));

@@ -104,7 +104,7 @@ public class ServiceController {
 	 * @param page 页号
 	 * @return
 	 */
-	@PostMapping("findbyname")
+	@GetMapping("findbyname")
 	public ResultBean findByName(String serviceName, Integer page,Integer limit) {
 		System.out.println(serviceName);
 		System.out.println(page);

@@ -108,7 +108,7 @@ public class PurchasedServiceController {
 	 * @param page
 	 * @return
 	 */
-	@PostMapping(value = "findbycidserviceid")
+	@GetMapping(value = "findbycidserviceid")
 	public ResultBean findByCidServiceId(Integer cid,Integer serviceId,Integer page,Integer limit) {
 		page=page-1;
 		Page<PurchasedService> purchasedServicePage=purchasedServiceService.findByCidServiceId(cid, serviceId, PageRequest.of(page, limit));

@@ -125,7 +125,7 @@ public class ServiceRelationshipController {
 	 * @param page
 	 * @return
 	 */
-	@PostMapping(value = "findbycideid")
+	@GetMapping(value = "findbycideid")
 	public ResultBean findByCidServiceId(Integer cid,Integer eid,Integer page,Integer limit) {
 		page=page-1;
 		Page<ServiceRelationship> serviceRelationshipPage=serviceRelationshipService.findByCidEid(cid, eid, PageRequest.of(page, limit));

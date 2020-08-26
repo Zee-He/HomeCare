@@ -87,7 +87,7 @@ public class CustomerHealthController {
 	 * @param page 页号
 	 * @return
 	 */
-	@PostMapping(value = "findbycid")
+	@GetMapping(value = "findbycid")
 	public ResultBean findByCid(Integer cid,Integer page,Integer limit) {
 		page=page-1;
 		Page<CustomerHealth> customerHealthPage=customerHealthService.findByCid(cid, PageRequest.of(page, limit));
