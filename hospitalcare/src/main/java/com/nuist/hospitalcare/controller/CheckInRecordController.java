@@ -29,7 +29,7 @@ public class CheckInRecordController {
      * @param bindingResult
      * @return
      */
-    @PutMapping("insert")
+    @PostMapping("insert")
     public ResultBean insert(@Validated CheckInRecord checkInRecord, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuffer msgBuffer = new StringBuffer();
@@ -78,7 +78,7 @@ public class CheckInRecordController {
      * @param page 页数
      * @return
      */
-    @PostMapping("findall")
+    @GetMapping("findall")
     public ResultBean findAll(Integer page,Integer limit) {
         page=page-1;
         Page<CheckInRecord> checkInRecordsPage = checkInRecordService.selectAll(PageRequest.of(page, limit));
@@ -94,7 +94,7 @@ public class CheckInRecordController {
      * @param page
      * @return
      */
-    @PostMapping("findbycondition")
+    @GetMapping("findbycondition")
     public ResultBean findByCondition(Integer cid, Integer bid, Date checkinDate, Integer page) {
         page=page-1;
         Page<CheckInRecord> checkInRecordsPage = checkInRecordService.findByCidAndBidAndCheckinDate(cid, bid, checkinDate, PageRequest.of(page, 10));

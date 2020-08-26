@@ -83,7 +83,7 @@
 
             // TODO 这里相当于ajax请求，不过名称有些不同
             url: GC.bctx + "checkoutRecord/findall", // 获取数据的接口
-            method: "post",
+            method: "get",
             // request参数定义了分页查询时的页码和条目数对应的服务器端参数名称
             request: {
                 pageName: "page", //页码的参数名称，默认：page
@@ -138,7 +138,7 @@
                 {
                     // TODO 下面是搜索的接口，除了额外参数和接口名不同，其他基本相同
                     url: GC.bctx + "checkoutRecord/findbycondition", // TODO 搜索数据的接口
-                    method: "post",
+                    method: "get",
                     // request参数定义了分页查询时的页码和条目数对应的服务器端参数名称
                     request: {
                         pageName: "page", //页码的参数名称，默认：page

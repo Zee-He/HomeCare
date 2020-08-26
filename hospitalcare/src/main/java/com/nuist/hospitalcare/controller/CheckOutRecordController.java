@@ -29,7 +29,7 @@ public class CheckOutRecordController {
      * @param bindingResult
      * @return
      */
-    @PutMapping("insert")
+    @PostMapping("insert")
     public ResultBean insert(@Validated CheckOutRecord checkOutRecord, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuffer msgBuffer = new StringBuffer();
@@ -78,7 +78,7 @@ public class CheckOutRecordController {
      * @param page 页数
      * @return
      */
-    @PostMapping("findall")
+    @GetMapping("findall")
     public ResultBean findAll(Integer page,Integer limit) {
         page=page-1;
         Page<CheckOutRecord> checkOutRecordsPage = checkOutRecordService.selectAll(PageRequest.of(page, limit));
@@ -94,7 +94,7 @@ public class CheckOutRecordController {
      * @param page
      * @return
      */
-    @PostMapping("findbycondition")
+    @GetMapping("findbycondition")
     public ResultBean findByCondition(Integer cid, Integer bid,Date checkoutDate,Integer page) {
         page=page-1;
         Page<CheckOutRecord> checkOutRecordsPage = checkOutRecordService.findByCidAndBidAndCheckoutDate(cid, bid, checkoutDate, PageRequest.of(page, 10));

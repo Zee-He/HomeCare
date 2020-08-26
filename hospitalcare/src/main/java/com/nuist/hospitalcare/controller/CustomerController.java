@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -36,7 +37,7 @@ public class CustomerController {
 	 * @param bindingResult
 	 * @return
 	 */
-	@PutMapping("insert")
+	@PostMapping("insert")
 	public ResultBean insert(@Validated Customer customer, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			StringBuffer msgBuffer = new StringBuffer();
@@ -84,7 +85,7 @@ public class CustomerController {
 	 * @param page 页数
 	 * @return
 	 */
-	@PostMapping("findall")
+	@GetMapping("findall")
 	public ResultBean findAll(Integer page, Integer limit) {
 		// 前端传过来的起始数字为1
 		page = page - 1;
@@ -99,7 +100,7 @@ public class CustomerController {
 	 * @param page 页数
 	 * @return
 	 */
-	@PostMapping("findbyname")
+	@GetMapping("findbyname")
 	public ResultBean findByName(String name, Integer page, Integer limit) {
 		page = page - 1;
 		Page<Customer> customerPage = customerService.findByNameInPage(name, PageRequest.of(page, limit, Sort.by("cid")));

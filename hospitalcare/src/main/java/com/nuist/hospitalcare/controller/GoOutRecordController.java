@@ -29,7 +29,7 @@ public class GoOutRecordController {
      * @param bindingResult
      * @return
      */
-    @PutMapping("insert")
+    @PostMapping("insert")
     public ResultBean insert(@Validated GoOutRecord goOutRecord, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuffer msgBuffer = new StringBuffer();
@@ -78,7 +78,7 @@ public class GoOutRecordController {
      * @param page 页数
      * @return
      */
-    @PostMapping("findall")
+    @GetMapping("findall")
     public ResultBean findAll(Integer page,Integer limit) {
         page=page-1;
         Page<GoOutRecord> goOutRecordsPage = goOutRecordService.selectAll(PageRequest.of(page, limit));
@@ -95,7 +95,7 @@ public class GoOutRecordController {
      * @param page
      * @return
      */
-    @PostMapping("findbycondition")
+    @GetMapping("findbycondition")
     public ResultBean findByCondition(Integer cid, Integer bid, Date goOutDate, Date goBackDate, Integer page) {
         page=page-1;
         Page<GoOutRecord> goOutRecordsPage = goOutRecordService.findByCidAndBidAndGoOutDateAndGoBackDate(cid, bid, goOutDate, goBackDate, PageRequest.of(page, 10));
