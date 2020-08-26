@@ -141,6 +141,7 @@
 		<script src="lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
 		<script src="js/lay-config.js?v=2.0.0" charset="utf-8"></script>
 		<script src="js/common.js"></script>
+		<script src="js/init_map.js"></script>
 		<script>
 			layui.use(["jquery", "layer", "miniAdmin", "miniTongji"], function () {
 				// 检查登录，失败将立即转到登录页
@@ -148,8 +149,17 @@
 
 				document.querySelector('#username').innerHTML = iCookie.get("username")
 				let userType = iCookie.get("usertype")
-				// 在这里做了分类判断，暂时只有两类，管理员和非管理员
-				let iniUrl = userType === '管理员' ? "api/admin_init.json" : "api/other_init.json";
+				// 在这里做了分类判断
+				let iniUrl = HC.init_map[userType]
+				if (!iniUrl) {
+					// 识别异常
+					layui.layer.msg("无法识别的用户", ()=>{
+						HC.removeUser()
+						window.location.href = window.location.origin+"/login.html"
+					})
+					return;
+				}
+				// let iniUrl = userType === '管理员' ? "api/admin_init.json" : "api/other_init.json";
 
 				var $ = layui.jquery,
 					layer = layui.layer,

@@ -18,8 +18,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.nuist.hospitalcare.bean.ResultBean;
 import com.nuist.hospitalcare.entity.Dependent;
-import com.nuist.hospitalcare.entity.ServiceRelationship;
-import com.nuist.hospitalcare.entity.ServiceRelationshipKey;
 import com.nuist.hospitalcare.service.DependentService;
 
 /**
