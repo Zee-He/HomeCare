@@ -47,13 +47,13 @@
 						},
 						{
 							"title": "外出记录",
-							"href": "hc/record_admin/check_out_record.html",
+							"href": "hc/record_admin/go_out_record.html",
 							"icon": "fa fa-gears",
 							"target": "_self"
 						},
 						{
 							"title": "退住记录",
-							"href": "hc/record_admin/go_out_record.html",
+							"href": "hc/record_admin/check_out_record.html",
 							"icon": "fa fa-gears",
 							"target": "_self"
 						}
