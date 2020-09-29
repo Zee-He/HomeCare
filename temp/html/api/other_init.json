@@ -1,0 +1,92 @@
+{
+	"homeInfo": {
+		"title": "首页",
+		"href": "hc/welcome-other.html"
+	},
+	"logoInfo": {
+		"title": "颐养中心系统",
+		"image": "images/logo.png",
+		"href": ""
+	},
+	"menuInfo": [
+		{
+			"title": "实际运行",
+			"icon": "fa fa-slideshare",
+			"href": "",
+			"target": "_self",
+			"child": [
+				{
+					"title": "入住记录",
+					"icon": "fa fa-slideshare",
+					"href": "",
+					"target": "_self",
+					"child": [
+						{
+							"title": "入住记录查询",
+							"icon": "fa fa-slideshare",
+							"href": "hc/record_staff/check_in_record.html",
+							"target": "_self"
+						},
+						{
+							"title": "入住登记",
+							"icon": "fa fa-slideshare",
+							"href": "hc/record_staff/checkinadd.html",
+							"target": "_self"
+						}
+					]
+				},
+				{
+					"title": "外出记录",
+					"icon": "fa fa-slideshare",
+					"href": "",
+					"target": "_self",
+					"child": [
+						{
+							"title": "外出记录查询",
+							"icon": "fa fa-slideshare",
+							"href": "hc/record_staff/go_out_record.html",
+							"target": "_self"
+						},
+						{
+							"title": "外出登记",
+							"icon": "fa fa-slideshare",
+							"href": "hc/record_staff/gooutadd.html",
+							"target": "_self"
+						}
+					]
+				},
+				{
+					"title": "退住记录",
+					"icon": "fa fa-slideshare",
+					"href": "",
+					"target": "_self",
+					"child": [
+						{
+							"title": "退住记录查询",
+							"icon": "fa fa-slideshare",
+							"href": "hc/record_staff/check_out_record.html",
+							"target": "_self"
+						},
+						{
+							"title": "退住登记",
+							"icon": "fa fa-slideshare",
+							"href": "hc/record_staff/checkoutadd.html",
+							"target": "_self"
+						}
+					]
+				}
+				
+				
+			]
+		},
+		{
+			"title": "后端调试",
+			"icon": "fa fa-slideshare",
+			"href": "",
+			"target": "_self",
+			"child": [
+				
+			]
+		}
+	]
+}

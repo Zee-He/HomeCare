@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>layui</title>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="stylesheet" href="../../lib/layui-v2.5.5/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/public.css" media="all"/>
+    <script src="../../js/common.js" charset="utf-8"></script>
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form layuimini-form" lay-filter="service_relationship_mod">
+    <div class="layui-form-item">
+        <label class="layui-form-label required">客户编号</label>
+        <div class="layui-input-block">
+            <input
+                    type="number"
+                    name="cid"
+                    lay-verify="required"
+                    lay-reqtext="客户编号不能为空"
+                    placeholder="请输入客户编号"
+                    value=""
+                    class="layui-input"
+            />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">员工编号</label>
+        <div class="layui-input-block">
+            <input
+                    type="number"
+                    name="eid"
+                    lay-verify="required"
+                    lay-reqtext="员工编号不能为空"
+                    placeholder="请输入员工编号"
+                    value=""
+                    class="layui-input"
+            />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+</div>
+
+<script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+<script>
+
+    // var source=new Map();
+    let old = null;
+
+    function child(params) {
+        layui.use(["form"], () => {
+            // console.log(typeof(params))
+            // params是父页面传过来的对象，可以打印但是不能直接用于复制
+            // 原因不明，但深拷贝一次可以解决这个问题
+            params = JSON.parse(JSON.stringify(params))
+            layui.form.val('service_relationship_mod', params)
+            // source.set("key",params)
+            old = params;
+        })
+    }
+
+    layui.use(["form"], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+
+        // 自定义验证格式，进阶
+        // form.verify({
+        // });
+
+        //监听提交
+        form.on("submit(saveBtn)", function (data) {
+            let field = {
+                cid: +data.field.cid,
+                eid: +data.field.eid
+            }
+            if (JSON.stringify(old) === JSON.stringify(field)) {
+                let index = layer.alert(
+                    "没有任何修改",
+                    () => {
+                        // 关闭弹出层
+                        layer.close(index);
+                        var iframeIndex = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(iframeIndex);
+                    }
+                );
+                return false;
+            }
+            // console.log(data.field)
+            // return false;
+            // source.set("entity",data.field)
+            // console.log(source);
+            // TODO 执行提交
+            $.ajax(
+                HC.packAjaxData({
+                    url: "servicerelationship/update",
+                    type: "put",
+                    data: {
+                        // 使用序列化的数据同时提交两个对象，服务器负责解析
+                        update:JSON.stringify({
+                            old:old,
+                            new:field
+                        })
+                    },
+                    success: (r) => {
+                        if (r.successed) {
+                            // 关闭页面
+                            let index = layer.alert(
+                                r.message,
+                                () => {
+                                    // 关闭弹出层
+                                    layer.close(index);
+                                    var iframeIndex = parent.layer.getFrameIndex(window.name);
+                                    parent.layer.close(iframeIndex);
+                                }
+                            );
+                        } else {
+                            layer.alert(r.message);
+                        }
+                    },
+                })
+            );
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

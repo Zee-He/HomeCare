@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>layui</title>
+		<meta name="renderer" content="webkit" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+		<link rel="stylesheet" href="../../lib/layui-v2.5.5/css/layui.css" media="all" />
+		<link rel="stylesheet" href="../../css/public.css" media="all" />
+		<style>
+			body {
+				background-color: #ffffff;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="layui-form layuimini-form" lay-filter="checkoutRecord_mod">
+			<div class="layui-form-item" aria-readonly="true">
+				<label class="layui-form-label required">客户编号</label>
+				<div class="layui-input-block">
+					<input
+						type="number"
+						name="cid"
+						lay-verify="required"
+						lay-reqtext="客户编号不能为空"
+						value=""
+						class="layui-input"
+					/>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label required">床位号</label>
+				<div class="layui-input-block">
+					<input
+						type="number"
+						name="bid"
+						lay-verify="required"
+						lay-reqtext="床位号不能为空"
+						placeholder="请输入床位号"
+						value=""
+						class="layui-input"
+					/>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label required">外出日期</label>
+				<div class="layui-input-block">
+					<input
+						type="text"
+						id="checkoutDate"
+						name="checkoutDate"
+						lay-verify="required"
+						lay-reqtext="外出日期不能为空"
+						placeholder="请输入外出日期"
+						value=""
+						class="layui-input"
+					/>
+				</div>
+			</div>
+
+			<div class="layui-form-item">
+				<div class="layui-input-block">
+					<button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+				</div>
+			</div>
+		</div>
+
+		<script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+		<script src="../../js/common.js"></script>
+		<script>
+			var data1
+			function child(params) {
+				layui.use(["form","util"], ()=> {
+					// console.log(typeof(params))
+					// params是父页面传过来的对象，可以打印但是不能直接用于复制
+					// 原因不明，但深拷贝一次可以解决这个问题
+					params = JSON.parse(JSON.stringify(params))
+					params["checkoutDate"]=layui.util.toDateString(params["checkoutDate"])
+                    layui.form.val('checkoutRecord_mod', params)
+					data1=JSON.parse(JSON.stringify(params))
+                })
+			}
+            layui.use('laydate', function(){
+                var laydate = layui.laydate;
+
+                //执行一个laydate实例
+                laydate.render({
+                    elem: '#checkoutDate' //指定元素
+                    ,type: 'datetime'
+                });
+            });
+
+			layui.use(["form"], function () {
+				var form = layui.form,
+				layer = layui.layer,
+				$ = layui.$;
+
+				//监听提交
+				form.on("submit(saveBtn)", function (data) {
+                    console.log(data)
+                    $.ajax(HC.packAjaxData({
+                        url:"checkoutRecord/delete",
+                        type:"delete",
+                        data: {
+                            cid: data1.cid,
+                            bid: data1.bid,
+                            checkoutDate: layui.util.toDateString(data1.checkoutDate),
+                        },
+                        success:(r)=>{
+                            if (r.successed) {
+                                // 刷新页面表格
+                                // obj.del();
+                                $.ajax(
+                                    HC.packAjaxData({
+                                        url: "checkoutRecord/update",
+                                        type: "put",
+                                        data:  data.field,
+                                        success: (r) => {
+                                            if (r.successed) {
+                                                // 关闭页面
+                                                let index = layer.alert(
+                                                    r.message,
+                                                    ()=> {
+                                                        // 关闭弹出层
+                                                        layer.close(index);
+                                                        var iframeIndex = parent.layer.getFrameIndex(window.name);
+                                                        parent.layer.close(iframeIndex);
+                                                    },
+													// window.location.href="check_out_record.html"
+                                                );
+                                            } else {
+                                                layer.alert(r.message);
+                                            }
+                                        },
+                                    })
+                                );
+                            } else {
+                                layer.alert(r.message)
+                            }
+                        }
+                    }))
+					// TODO 执行修改
+					// $.ajax(
+					// 	HC.packAjaxData({
+					// 		url: "checkoutRecord/update",
+					// 		type: "put",
+					// 		data:  data.field,
+					// 		success: (r) => {
+					// 			if (r.successed) {
+					// 				// 关闭页面
+					// 				let index = layer.alert(
+					// 					r.message,
+					// 					()=> {
+					// 						// 关闭弹出层
+					// 						layer.close(index);
+					//
+					// 						var iframeIndex = parent.layer.getFrameIndex(window.name);
+					// 						parent.layer.close(iframeIndex);
+					// 					}
+					// 				);
+					// 			} else {
+					// 				layer.alert(r.message);
+					// 			}
+					// 		},
+					// 	})
+					// );
+
+					return false;
+				});
+			});
+		</script>
+	</body>
+</html>

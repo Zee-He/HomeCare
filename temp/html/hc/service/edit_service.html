@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>layui</title>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="stylesheet" href="../../lib/layui-v2.5.5/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/public.css" media="all"/>
+    <script src="../../js/common.js" charset="utf-8"></script>
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form layuimini-form" lay-filter="service_mod">
+    <div class="layui-form-item" aria-readonly="true">
+        <label class="layui-form-label required">服务编号</label>
+        <div class="layui-input-block">
+            <input
+                    type="number"
+                    name="serviceId"
+                    readonly="readonly"
+                    value=""
+                    class="layui-input"
+            />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">服务名称</label>
+        <div class="layui-input-block">
+            <input
+                    type="text"
+                    name="serviceName"
+                    lay-verify="required"
+                    lay-reqtext="服务名称不能为空"
+                    placeholder="请输入服务名称"
+                    value=""
+                    class="layui-input"
+            />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label ">描述</label>
+        <div class="layui-input-block">
+            <textarea name="serviceRemark" placeholder="请输入服务描述" class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">状态</label>
+        <div class="layui-input-block">
+            <input type="radio" name="serviceStatus" value="可用" title="可用" checked=""/>
+            <input type="radio" name="serviceStatus" value="不可用" title="不可用"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">售价</label>
+        <div class="layui-input-block">
+            <input
+                    type="number"
+                    name="servicePrice"
+                    lay-verify="servicePrice"
+                    placeholder="请输入售价"
+                    value=""
+                    class="layui-input"
+            />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">服务上架日期</label>
+        <div class="layui-input-block">
+            <input
+                    type="text"
+                    name="serviceDate"
+                    id="serviceDate"
+                    autocomplete="off"
+                    lay-verify="required"
+                    lay-reqtext="服务上架日期不能为空"
+                    value=""
+                    class="layui-input"
+            />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">服务有效时间/天</label>
+        <div class="layui-input-block">
+            <input
+                    type="number"
+                    name="serviceValidTime"
+                    lay-verify="required"
+                    lay-reqtext="服务有效时间不能为空"
+                    placeholder="请输入服务有效时间"
+                    value=""
+                    class="layui-input"
+            />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+</div>
+
+<script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+<script>
+
+    function child(params) {
+
+        layui.use(["form", "util", "laydate"], () => {
+
+            layui.laydate.render({
+                elem: '#serviceDate' //指定元素
+                ,type: "datetime"
+                ,format: "yyyy-MM-dd HH:mm:ss"
+                ,trigger: 'click'
+            });
+            // console.log(typeof(params))
+            // params是父页面传过来的对象，可以打印但是不能直接用于复制
+            // 原因不明，但深拷贝一次可以解决这个问题
+            params = JSON.parse(JSON.stringify(params))
+            params.serviceDate = layui.util.toDateString(params.serviceDate)
+            layui.form.val('service_mod', params)
+        })
+    }
+
+    layui.use(["form"], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+
+        // 自定义验证格式，进阶
+        form.verify({
+            // 价格
+            servicePrice: (value) => {
+                if (value.length === 0) {
+                    return "售价不能为空";
+                }
+                if (value < 0) {
+                    return "售价必须大于0";
+                }
+            },
+        });
+
+        //监听提交
+        form.on("submit(saveBtn)", function (data) {
+            // TODO 执行修改
+            $.ajax(
+                HC.packAjaxData({
+                    url: "service/update/" + data.field.serviceId,
+                    type: "put",
+                    data: data.field,
+                    success: (r) => {
+                        if (r.successed) {
+                            // 关闭页面
+                            let index = layer.alert(
+                                r.message,
+                                () => {
+                                    // 关闭弹出层
+                                    layer.close(index);
+
+                                    var iframeIndex = parent.layer.getFrameIndex(window.name);
+                                    parent.layer.close(iframeIndex);
+                                }
+                            );
+                        } else {
+                            layer.alert(r.message);
+                        }
+                    },
+                })
+            );
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

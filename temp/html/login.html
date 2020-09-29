@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>登录</title>
+		<script src="js/jquery.js"></script>
+		<script src="js/common.js"></script>
+		<link rel="stylesheet" href="css/login.css" />
+	</head>
+
+	<body>
+		<script>
+			$(function () {
+				$("form").submit(function () {
+					$.ajax(
+						HC.packAjaxData({
+							url: "user/login",
+							type: "post",
+							data: $("form").serialize(),
+							success: function (r) {
+								console.log(r);
+								if (r.successed) {
+									HC.saveUser(r.data);
+									window.location.href = "index.html";
+								} else {
+									HC.removeUser();
+									alert(r.message);
+								}
+							},
+						})
+					);
+					return false;
+				});
+			});
+		</script>
+		<div class="container">
+			<!-- code here -->
+			<div class="card">
+				<form class="card-form">
+					<div class="input">
+						<input type="text" class="input-field" required="" name="eid" id="eid" />
+						<label class="input-label">员工编号</label>
+					</div>
+					<div class="input">
+						<input type="password" class="input-field" required="" name="password" id="password" />
+						<label class="input-label">登录密码</label>
+					</div>
+					<div class="action">
+						<button class="action-button">登录</button>
+					</div>
+				</form>
+				<div class="card-info">
+					<p>如有疑问请先仔细阅读 <a href="#">使用说明</a></p>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

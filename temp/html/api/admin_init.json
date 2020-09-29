@@ -1,0 +1,127 @@
+{
+	"homeInfo": {
+		"title": "首页",
+		"href": "hc/welcome.html"
+	},
+	"logoInfo": {
+		"title": "颐养中心系统",
+		"image": "images/logo.png",
+		"href": ""
+	},
+	"menuInfo":[
+		{
+			"title": "实际运行",
+			"icon": "fa fa-slideshare",
+			"href": "",
+			"target": "_self",
+			"child": [
+				{
+					"title": "客户管理",
+					"href": "",
+					"icon": "fa fa-gears",
+					"target": "_self",
+					"child":[
+						{
+							"title": "客户信息",
+							"href": "hc/customer/customer.html",
+							"icon": "fa fa-gears",
+							"target": "_self"
+						},
+						{
+							"title": "家属信息",
+							"href": "hc/dependent/dependent.html",
+							"icon": "fa fa-gears",
+							"target": "_self"
+						},
+						{
+							"title": "健康档案",
+							"href": "hc/customer_health/customer_health.html",
+							"icon": "fa fa-gears",
+							"target": "_self"
+						},
+						{
+							"title": "入住记录",
+							"href": "hc/record_admin/check_in_record.html",
+							"icon": "fa fa-gears",
+							"target": "_self"
+						},
+						{
+							"title": "外出记录",
+							"href": "hc/record_admin/go_out_record.html",
+							"icon": "fa fa-gears",
+							"target": "_self"
+						},
+						{
+							"title": "退住记录",
+							"href": "hc/record_admin/check_out_record.html",
+							"icon": "fa fa-gears",
+							"target": "_self"
+						}
+					]
+				},
+				{
+					"title": "服务管理",
+					"href": "",
+					"icon": "fa fa-gears",
+					"target": "_self",
+					"child":[
+						{
+							"title": "服务信息",
+							"href": "hc/service/service.html",
+							"icon": "fa fa-gears",
+							"target": "_self"
+						},
+						{
+							"title": "服务购买记录",
+							"href": "hc/purchased_service/purchased_service.html",
+							"icon": "fa fa-gears",
+							"target": "_self"
+						}
+					]
+				},
+				{
+					"title": "护士站",
+					"href": "",
+					"icon": "fa fa-gears",
+					"target": "_self",
+					"child":[
+						{
+							"title": "服务关系管理",
+							"href": "hc/service_relationship/service_relationship.html",
+							"icon": "fa fa-gears",
+							"target": "_self"
+						}
+					]
+				}
+			]
+		},
+		{
+			"title": "后端调试",
+			"icon": "fa fa-slideshare",
+			"href": "",
+			"target": "_self",
+			"child": [
+				{
+					"title": "Customer",
+					"href": "",
+					"icon": "fa fa-gears",
+					"target": "_self",
+					"child":[
+						{
+							"title": "layui table测试",
+							"href": "hc/customer/customer.html",
+							"icon": "fa fa-gears",
+							"target": "_self"
+						},
+						{
+							"title": "数据获取",
+							"href": "hc/customer/customer_interfacetest.html",
+							"icon": "fa fa-gears",
+							"target": "_self"
+						}
+					]
+				}
+			]
+		}
+	]
+}

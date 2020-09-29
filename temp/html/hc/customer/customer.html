@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>layui</title>
+		<meta name="renderer" content="webkit" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+		<link rel="stylesheet" href="../../lib/layui-v2.5.5/css/layui.css" media="all" />
+		<link rel="stylesheet" href="../../css/public.css" media="all" />
+	</head>
+
+	<body>
+		<div class="layuimini-container">
+			<div class="layuimini-main">
+				<fieldset class="table-search-fieldset">
+					<legend>搜索信息</legend>
+					<div style="margin: 10px 10px 10px 10px;">
+						<form class="layui-form layui-form-pane" action="">
+							<div class="layui-form-item">
+								<div class="layui-inline">
+									<label class="layui-form-label">用户姓名</label>
+									<div class="layui-input-inline">
+										<input type="text" name="name" autocomplete="off" class="layui-input" />
+									</div>
+								</div>
+								<div class="layui-inline">
+									<button
+										type="submit"
+										class="layui-btn layui-btn-primary"
+										lay-submit
+										lay-filter="data-search-btn"
+									>
+										<i class="layui-icon"></i> 搜 索
+									</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</fieldset>
+
+				<script type="text/html" id="toolbarDemo">
+					<div class="layui-btn-container">
+					    <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
+					</div>
+				</script>
+
+				<table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+				<script type="text/html" id="currentTableBar">
+					<a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+					<a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+				</script>
+			</div>
+		</div>
+		<script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+		<script src="../../js/common.js"></script>
+		<script>
+			layui.use(["form", "table"], function () {
+				var $ = layui.jquery,
+					form = layui.form,
+					table = layui.table;
+
+				table.render({
+					elem: "#currentTableId",
+
+					// TODO 这里相当于ajax请求，不过名称有些不同
+					url: GC.bctx + "customer/findall", // 获取数据的接口
+					method: "get",
+					// request参数定义了分页查询时的页码和条目数对应的服务器端参数名称
+					request: {
+						pageName: "page", //页码的参数名称，默认：page
+						limitName: "limit", //每页数据量的参数名，默认：limit
+					},
+					headers: HC.token(),
+					parseData: (res) => {
+						return {
+							code: res.code === 200 ? 0 : res.code, //解析接口状态
+							msg: res.message, //解析提示文本
+							count: res.data ? res.data.totalElements : 0, //解析数据长度
+							data: res.data ? res.data.content: [], //解析数据列表
+						};
+					},
+
+					// 这里无需修改
+					toolbar: "#toolbarDemo",
+					defaultToolbar: [
+						"filter",
+						"exports",
+						"imports",
+						"print",
+						{
+							title: "提示",
+							layEvent: "LAYTABLE_TIPS",
+							icon: "layui-icon-tips",
+						},
+					],
+
+					cols: [
+						[
+							// 由于不存在允许批量执行的操作，取消复选框
+							// { type: "checkbox", width: 50 },
+
+							// 下面是字段名和表头
+							{ field: "cid", title: "客户编号", sort: true },
+							{ field: "name", title: "姓名" },
+							{ field: "age", title: "年龄", sort: true },
+							{ field: "sex", title: "性别" },
+							{ field: "pid", title: "身份证号", minWidth: 150 },
+							{ field: "telephone", title: "电话", sort: true },
+							{ field: "address", title: "地址", sort: true },
+							{ title: "操作", minWidth: 150, toolbar: "#currentTableBar", align: "center" },
+						],
+					],
+					limits: HC.page.limits,
+					limit: HC.page.limit,
+					page: true,
+					skin: "line",
+				});
+
+				// 监听搜索操作
+				form.on("submit(data-search-btn)", function (data) {
+					//执行搜索重载
+					table.reload(
+						"currentTableId",
+						{
+							// TODO 下面是搜索的接口，除了额外参数和接口名不同，其他基本相同
+							url: GC.bctx + "customer/findbyname", // TODO 搜索数据的接口
+							method: "get",
+							// request参数定义了分页查询时的页码和条目数对应的服务器端参数名称
+							request: {
+								pageName: "page", //页码的参数名称，默认：page
+								limitName: "limit", //每页数据量的参数名，默认：limit
+							},
+							// TODO data.field是JSON格式的表单数据，直接应用即可（如果是post方式）
+							where: data.field,
+							page: {
+								curr: 1,
+							},
+							headers: HC.token(),
+							parseData: (res) => {
+								return {
+									code: res.code === 200 ? 0 : res.code, //解析接口状态
+									msg: res.message, //解析提示文本
+									count: res.data.totalElements, //解析数据长度
+									data: res.data.content, //解析数据列表
+								};
+							},
+						},
+						"data"
+					);
+
+					return false;
+				});
+
+				/**
+				 * toolbar监听事件
+				 */
+				table.on("toolbar(currentTableFilter)", function (obj) {
+					if (obj.event === "add") {
+						// 监听添加操作
+						var index = layer.open({
+							title: "添加用户",
+							type: 2,
+							shade: 0.2,
+							maxmin: true,
+							shadeClose: true,
+							area: ["100%", "100%"],
+							// TODO 添加页面目标
+							content: "add.html",
+						});
+						$(window).on("resize", function () {
+							layer.full(index);
+						});
+					} else if (obj.event === "LAYTABLE_TIPS") {
+						let index = layer.alert("请谨慎操作")
+					}
+				});
+
+				// 监听表格复选框选择
+				// table.on("checkbox(currentTableFilter)", function (obj) {
+				// 	console.log(obj);
+				// });
+
+				table.on("tool(currentTableFilter)", function (obj) {
+					var data = obj.data;
+					// 监听编辑事件
+					if (obj.event === "edit") {
+						var index = layer.open({
+							title: "编辑用户",
+							type: 2,
+							shade: 0.2,
+							maxmin: true,
+							shadeClose: true,
+							area: ["100%", "100%"],
+							// TODO 编辑页面目标
+							content: "edit.html",
+							// TODO 向编辑页面传值
+							success: () => {
+								var iframe = window["layui-layer-iframe" + index];
+								iframe.child(data);
+							},
+						});
+						$(window).on("resize", function () {
+							layer.full(index);
+						});
+						return false;
+					} else if (obj.event === "delete") {
+						// 监听单行删除操作
+						layer.confirm("确认删除该行？", function (index) {
+							// TODO 删除数据操作，这个使用普通的ajax就行
+							console.log(data);
+							$.ajax(
+								HC.packAjaxData({
+									url: "customer/delete/" + data.cid,
+									type: "delete",
+									success: (r) => {
+										if (r.successed) {
+											// 刷新页面表格
+											obj.del();
+										} else {
+											layer.alert(r.message);
+										}
+									},
+								})
+							);
+							layer.close(index);
+						});
+					}
+				});
+			});
+		</script>
+	</body>
+</html>
